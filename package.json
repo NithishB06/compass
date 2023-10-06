@@ -1,0 +1,26 @@
+{
+  "name": "compass",
+  "version": "1.0.0",
+  "description": "compass is a bot that can automate social-media interactions",
+  "main": "compass.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NithishB06/compass.git"
+  },
+  "keywords": [
+    "compass"
+  ],
+  "author": "NithishB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NithishB06/compass/issues"
+  },
+  "homepage": "https://github.com/NithishB06/compass#readme",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "puppeteer": "^21.3.6"
+  }
+}
