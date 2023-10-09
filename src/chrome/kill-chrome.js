@@ -4,7 +4,7 @@ const constants = require("../constants");
 const killChromeProcesses = () => {
 	try {
 		execSync(constants.CHROME_KILL_COMMAND, { stdio: "ignore" });
-	} catch (err) {}
+	} catch {}
 };
 
 module.exports = killChromeProcesses;

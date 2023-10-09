@@ -58,10 +58,6 @@ async function addHomePageInChrome(profiles, webAddress) {
 		await page.keyboard.type(webAddress);
 		await page.keyboard.press("Enter");
 
-		// console.log(
-		// 	`[COMPASS]: (${profile}) Successfully added ${webAddress} to Chrome home page`
-		// );
-
 		process.stdout.write(
 			`[COMPASS]: Adding home page in chrome [${+index + 1}/${
 				profiles.length

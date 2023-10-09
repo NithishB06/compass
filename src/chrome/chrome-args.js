@@ -29,7 +29,6 @@ module.exports = Object.freeze({
 		"--hide-scrollbars",
 		"--ignore-gpu-blacklist",
 		"--metrics-recording-only",
-		"--mute-audio",
 		"--no-default-browser-check",
 		"--no-first-run",
 		"--no-pings",
@@ -38,5 +37,6 @@ module.exports = Object.freeze({
 		"--password-store=basic",
 		"--use-gl=swiftshader",
 		"--use-mock-keychain",
+		"--disable-features=site-per-process",
 	],
 });
