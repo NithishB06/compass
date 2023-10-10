@@ -47,4 +47,15 @@ module.exports = Object.freeze({
 	COMMENT_SEND_BUTTON: `div[aria-label='Comment' i][role='button' i]`,
 	LEAVE_A_COMMENT_BUTTON: `div[aria-label='Leave a comment' i][role='button' i]`,
 	CLOSE_BUTTON: `div[aria-label='Close' i][role='button' i]`,
+
+	OBS_WEBSOCKET_HOST: configData.OBSWebsocketHost,
+	OBS_WEBSOCKET_PORT: configData.OBSWebsocketPort,
+	OBS_WEBSOCKET_PASSWORD: configData.OBSWebsocketPassword,
+
+	PERSISTENT_KEY: configData.persistentKey,
+
+	SCENE_NAME: configData.sceneName,
+	THUMBNAIL_SOURCE_NAME: configData.thumbnailSourceName,
+	MEDIA_SOURCE_NAME: configData.mediaSourceName,
+	BGM_SOURCE_NAME: configData.bgmSourceName,
 });
