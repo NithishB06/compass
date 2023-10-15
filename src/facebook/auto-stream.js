@@ -58,10 +58,10 @@ export async function autoStreamVideos(profile) {
 
 		// VISITS THE PAGE URL
 		await page.goto(constants.LIVE_SETUP_PAGE_URL);
-		await page.setViewport({
-			width: constants.CHROME_VIEW_PORT_WIDTH,
-			height: constants.CHROME_VIEW_PORT_HEIGHT,
-		});
+		// await page.setViewport({
+		// 	width: constants.CHROME_VIEW_PORT_WIDTH,
+		// 	height: constants.CHROME_VIEW_PORT_HEIGHT,
+		// });
 
 		// CHECK IF THE PAGE HAS SWITCH BUTTON - TO IDENTIFY IF CURRENT LOGIN IS USER OR PAGE
 		const pageSwitchButton =
