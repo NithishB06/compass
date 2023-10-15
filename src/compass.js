@@ -64,7 +64,7 @@ async function facebookAutoStream() {
 
 		while (videoNumber <= constants.NUMBER_OF_VIDEOS_IN_PLAYLIST) {
 			if (videoNumber != 1) {
-				await delay(constants.INTERVAL_BETWEEN_STREAMS);
+				await delay(constants.INTERVAL_BETWEEN_STREAMS * 60);
 			}
 
 			console.log(`Video [${videoNumber}] ready to be streamed`);
