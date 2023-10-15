@@ -7,6 +7,7 @@ import { profiles } from "./util/generate-profile-list.js";
 import { userInteraction } from "./util/user-interaction.js";
 import { interactHomePagePosts } from "./facebook/interact-homepage-posts.js";
 import { autoStreamVideos } from "./facebook/auto-stream.js";
+import { delay } from "./util/add-delay.js";
 
 // KILLS ALL EXISTING CHROME PROCESSES
 killChromeProcesses();
