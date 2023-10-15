@@ -9,6 +9,7 @@ import { interactHomePagePosts } from "./facebook/interact-homepage-posts.js";
 import { autoStreamVideos } from "./facebook/auto-stream.js";
 import { delay } from "./util/add-delay.js";
 import { setPersistentKey } from "./obs/set-persistent-key.js";
+import { sendTelegramMessage } from "./telegram/send-message.js";
 
 // KILLS ALL EXISTING CHROME PROCESSES
 killChromeProcesses();
@@ -62,15 +63,16 @@ async function facebookAutoStream() {
 
 		await setPersistentKey(constants.PERSISTENT_KEY);
 
+		sendTelegramMessage(
+			`Initializing auto-stream for ${constants.NUMBER_OF_VIDEOS_IN_PLAYLIST} video(s)`
+		);
+
 		while (videoNumber <= constants.NUMBER_OF_VIDEOS_IN_PLAYLIST) {
 			if (videoNumber != 1) {
-				console.log(
-					`Sleeping for ${constants.INTERVAL_BETWEEN_STREAMS} minute(s)`
-				);
 				await delay(constants.INTERVAL_BETWEEN_STREAMS * 60);
 			}
 
-			console.log(`Video [${videoNumber}] ready to be streamed`);
+			console.log(`Video ${videoNumber} ready to be streamed`);
 
 			killChromeProcesses();
 			await autoStreamVideos(profiles[0]);

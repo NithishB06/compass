@@ -113,4 +113,7 @@ export const constants = {
 	AUDIENCE_RESTRICTION: configData.audienceRestriction,
 
 	PAGE_QUALITY_PAGE: `https://www.facebook.com/settings?tab=profile_quality`,
+
+	TELEGRAM_API: configData.telegramAPI,
+	TELEGRAM_CHAT_ID: configData.telegramChatId,
 };

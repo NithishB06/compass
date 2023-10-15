@@ -13,6 +13,7 @@ import { moveNextVideo } from "../obs/move-next-video.js";
 import { setStreamStatus } from "../obs/set-stream-status.js";
 import { addMinutes } from "../util/add-minutes-to-date.js";
 import clipboard from "clipboardy";
+import { sendTelegramMessage } from "../telegram/send-message.js";
 
 export async function autoStreamVideos(profile) {
 	try {
@@ -118,6 +119,9 @@ export async function autoStreamVideos(profile) {
 
 		console.log("Total Followers: ", followers);
 		console.log("Total Strikes: ", totalStrikes);
+
+		sendTelegramMessage(`Total followers: ${followers}`);
+		sendTelegramMessage(`Total strikes: ${totalStrikes}`);
 
 		// GO TO LIVE SETUP URL AND WAIT FOR FULL PAGE TO LOAD
 		await page.goto(constants.LIVE_SETUP_URL);
@@ -355,6 +359,9 @@ export async function autoStreamVideos(profile) {
 				await confirmDeleteButton.click();
 
 				console.log("Video abruptly ended due to Strike");
+				sendTelegramMessage(
+					"Video taken down due to strike, handled abrupt deletion"
+				);
 				videoDeleted = true;
 
 				var obsStrikeStats = await fetchOBSStrikeStatus(
@@ -362,6 +369,9 @@ export async function autoStreamVideos(profile) {
 				);
 
 				console.log("OBS Strike Stats: ", obsStrikeStats);
+				sendTelegramMessage(
+					`OBS Strike Stats: \nCursor: ${obsStrikeStats.currentCursor}\nDuration: ${obsStrikeStats.totalDuration}\nImage path: ${obsStrikeStats.imagePath}`
+				);
 
 				// HANDLE OBS - FOR ABRUPT DELETION //
 				await setStreamStatus("stop");
@@ -410,6 +420,7 @@ export async function autoStreamVideos(profile) {
 			await confirmDeleteButton.click();
 
 			console.log("Graceful delete successfully completed");
+			sendTelegramMessage("Video successfully streamed and deleted");
 
 			// HANDLE OBS - FOR GRACEFUL DELETION //
 			await setStreamStatus("stop");
@@ -431,5 +442,6 @@ export async function autoStreamVideos(profile) {
 		await browser.close();
 	} catch (error) {
 		console.log(error);
+		sendTelegramMessage(`An error occured: ${error}`);
 	}
 }
