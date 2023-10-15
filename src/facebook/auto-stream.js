@@ -127,8 +127,6 @@ export async function autoStreamVideos(profile) {
 		sendTelegramMessage(`Total followers: ${followers}`);
 		sendTelegramMessage(`Total strikes: ${totalStrikes}`);
 
-		await delay(1);
-
 		// GO TO LIVE SETUP URL AND WAIT FOR FULL PAGE TO LOAD
 		await page.goto(constants.LIVE_SETUP_URL);
 		// await page.waitForSelector(constants.SWITCH_SELECTOR);
