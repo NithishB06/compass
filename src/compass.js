@@ -66,6 +66,8 @@ async function facebookAutoStream() {
 
 			killChromeProcesses();
 			await autoStreamVideos(profiles[0]);
+
+			videoNumber += 1;
 		}
 	} catch (err) {
 		console.log(err);
