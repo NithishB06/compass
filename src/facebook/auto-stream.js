@@ -447,10 +447,5 @@ export async function autoStreamVideos(profile) {
 	} catch (error) {
 		console.log(error);
 		sendTelegramMessage(`An error occured: ${error}`);
-		await page.screenshot({
-			path: `${getScreenshotSavePath(
-				"facebook"
-			)}\\${currentDateTimeString}.png`,
-		});
 	}
 }
