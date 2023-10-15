@@ -218,7 +218,7 @@ export async function autoStreamVideos(profile) {
 		}
 
 		// await page.waitForNavigation();
-
+		await delay(2);
 		// CLICK ON STREAMING SOFTWARE AND ACTIVATE PERSISTENT KEY
 		(await page.$(constants.STREAMING_SOFTWARE_SELECTOR)).click();
 		await page.waitForSelector(constants.STREAM_KEY_INPUT_SELECTOR);
