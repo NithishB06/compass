@@ -1,4 +1,4 @@
-const constants = require("../constants");
+import { constants } from "../constants.js";
 
 const profileNumbers = [];
 var chromeProfileRanges = constants.CHROME_PROFILE_RANGES;
@@ -22,7 +22,7 @@ if (chromeProfiles) {
 
 profileNumbers.sort((a, b) => a - b);
 
-const profiles = [];
+export const profiles = [];
 var profileString;
 var profileName;
 
@@ -42,5 +42,3 @@ if (profileNumbers) {
 		profiles.push(profileName);
 	}
 }
-
-module.exports = profiles;

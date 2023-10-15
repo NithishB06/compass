@@ -1,8 +1,6 @@
-const OBSWebSocket = require("obs-websocket-js").default;
-const constants = require("../constants");
+import OBSWebSocket from "obs-websocket-js";
+import { constants } from "../constants.js";
 
-const obs = new OBSWebSocket();
+export const obs = new OBSWebSocket();
 
-const hostString = `ws://${constants.OBS_WEBSOCKET_HOST}:${constants.OBS_WEBSOCKET_PORT}`;
-
-module.exports = { obs, hostString };
+export const hostString = `ws://${constants.OBS_WEBSOCKET_HOST}:${constants.OBS_WEBSOCKET_PORT}`;

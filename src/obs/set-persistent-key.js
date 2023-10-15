@@ -1,7 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function setPersistentKey(persistentKey) {
+export async function setPersistentKey(persistentKey) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	try {
@@ -24,5 +24,3 @@ async function setPersistentKey(persistentKey) {
 
 	await obs.disconnect();
 }
-
-module.exports = setPersistentKey;

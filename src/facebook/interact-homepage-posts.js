@@ -1,16 +1,15 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
-const constants = require("../constants");
-const { chromeArgs } = require("../chrome/chrome-args");
-const pickRandomPhrase = require("../util/randomize-phrases");
+import { constants } from "../constants.js";
+import { chromeArgs } from "../chrome/chrome-args.js";
+import { pickRandomPhrase } from "../util/randomize-phrases.js";
+import {
+	getDateString,
+	getScreenshotSavePath,
+} from "../util/screenshot-helper.js";
+import { delay } from "../util/add-delay.js";
 
-function delay(time) {
-	return new Promise(function (resolve) {
-		setTimeout(resolve, time * 1000);
-	});
-}
-
-async function interactHomePagePosts(profile) {
+export async function interactHomePagePosts(profile) {
 	try {
 		const browser = await puppeteer.launch({
 			headless: "new",
@@ -81,6 +80,14 @@ async function interactHomePagePosts(profile) {
 
 				await likeButtonsAfterClick.at(-1).click();
 
+				// SCREENSHOT EVERY POST
+				var currentDateTimeString = getDateString();
+				await page.screenshot({
+					path: `${getScreenshotSavePath(
+						"facebook"
+					)}\\${currentDateTimeString}.png`,
+				});
+
 				// PICK RANDOMIZED PHRASE TO COMMENT
 				var randomPhrase = await pickRandomPhrase("");
 
@@ -89,7 +96,16 @@ async function interactHomePagePosts(profile) {
 				await delay(2);
 
 				// CLICK ON COMMENT BUTTON TO FOCUS ON THE COMMENT SECTION, THEN ENTER THE RANDOM PHRASE AND PRESS ENTER
-				await commentButtons.at(-1).click();
+				try {
+					await commentButtons.at(-1).click();
+				} catch {
+					console.log("Panic");
+					count += 1;
+					const panicCloseButton = await page.$$(constants.CLOSE_BUTTON);
+					await panicCloseButton[0].click();
+					continue;
+				}
+
 				await page.keyboard.type(randomPhrase);
 				await page.keyboard.press("Enter");
 
@@ -107,9 +123,16 @@ async function interactHomePagePosts(profile) {
 				);
 
 				process.stdout.cursorTo(0);
-			} catch (err) {
-				console.log("Error from Try Catch: ", err);
-				break;
+			} catch {
+				var currentDateTimeString = getDateString();
+
+				await page.screenshot({
+					path: `${getScreenshotSavePath(
+						"facebook"
+					)}\\${currentDateTimeString}.png`,
+				});
+
+				count += 1;
 			}
 		}
 
@@ -118,5 +141,3 @@ async function interactHomePagePosts(profile) {
 		process.stdout.write("\n");
 	} catch {}
 }
-
-module.exports = interactHomePagePosts;

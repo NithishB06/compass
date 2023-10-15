@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "compass is a bot that can automate social-media interactions",
   "main": "compass.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/NithishB06/compass#readme",
   "dependencies": {
+    "clipboardy": "^3.0.0",
     "js-yaml": "^4.1.0",
     "obs-websocket-js": "^5.0.3",
     "puppeteer": "^21.3.6",

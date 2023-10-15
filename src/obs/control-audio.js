@@ -1,9 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function controlAudio(sourceName, action) {
+export async function controlAudio(sourceName, action) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	var mute = false;
@@ -19,5 +17,3 @@ async function controlAudio(sourceName, action) {
 
 	await obs.disconnect();
 }
-
-module.exports = controlAudio;

@@ -1,6 +1,6 @@
-const configData = require("./util/read-config");
+import { configData } from "./util/read-config.js";
 
-module.exports = Object.freeze({
+export const constants = {
 	CHROME_KILL_COMMAND: "TASKKILL /f  /IM  CHROME.EXE",
 
 	CHROME_EXE_PATH: String.raw`${configData.chromeExecutablePath}`,
@@ -42,7 +42,7 @@ module.exports = Object.freeze({
 	SWITCH_TO_PAGE_BUTTON: `div[aria-label='Switch' i][role='button' i]`,
 	SEE_ALL_PROFILES_BUTTON: `div[aria-label='See all profiles' i][role='button' i]`,
 
-	HOME_PAGE_PICTURE: `div.x10l6tqk.x13vifvy > img`,
+	HOME_PAGE_PICTURE: `img.x1ey2m1c.xds687c.x5yr21d.x10l6tqk.x17qophe.x13vifvy.xh8yej3.xl1xv1r`,
 	LIKE_BUTTON: `div.x1i10hfl.x1qjc9v5.xjbqb8w.xjqpnuy.xa49m3k.xqeqjp1.x2hbi6w.x13fuv20.xu3j5b3.x1q0q8m5.x26u7qi.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.x1ypdohk.xdl72j9.x2lah0s.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x2lwn1j.xeuugli.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x1n2onr6.x16tdsg8.x1hl2dhg.x1ja2u2z.x1t137rt.x1o1ewxj.x3x9cwd.x1e5q0jg.x13rtm0m.x3nfvp2.x1q0g3np.x87ps6o.x1lku1pv.x1a2a7pz.x5ve5x3`,
 	COMMENT_SEND_BUTTON: `div[aria-label='Comment' i][role='button' i]`,
 	LEAVE_A_COMMENT_BUTTON: `div[aria-label='Leave a comment' i][role='button' i]`,
@@ -58,4 +58,57 @@ module.exports = Object.freeze({
 	THUMBNAIL_SOURCE_NAME: configData.thumbnailSourceName,
 	MEDIA_SOURCE_NAME: configData.mediaSourceName,
 	BGM_SOURCE_NAME: configData.bgmSourceName,
-});
+
+	LIVE_DURATION: configData.liveDuration,
+	NUMBER_OF_VIDEOS_IN_PLAYLIST: configData.numberOfVideosInPlaylist,
+	INTERVAL_BETWEEN_STREAMS: configData.intervalBetweenStreams,
+
+	LIVE_SETUP_PAGE_URL: configData.liveSetupPageURL,
+	LIVE_SETUP_URL: configData.liveSetupURL,
+	LIVE_SETUP_GO_LIVE_BUTTON: `div[aria-label='Go live' i][role='button' i]`,
+	LIKES_AND_FOLLOWERS_SELECTOR: `a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.xt0b8zv.xi81zsa.x1s688f`,
+	SWITCH_SELECTOR: `div[role='switch' i]`,
+	BUTTON_SELECTOR: `div[role='button' i]`,
+	REMOVE_BUTTON_SELECTOR: `div[aria-label='Remove' i][role='button' i]`,
+	RADIO_BUTTON_SELECTOR: `div[role='radio' i]`,
+	CLOSE_BUTTON_SELECTOR: `div[aria-label='Close' i][role='button' i]`,
+	SAVE_BUTTON_SELECTOR: `div[aria-label='Save' i][role='button' i]`,
+	AUDIENCE_SETTING_COMBOBOX_SELECTOR: `label[aria-expanded='false' i][role='combobox' i][aria-label='Age' i]`,
+	OPTION_SELECTOR: `div[role='option' i]`,
+	STREAMING_SOFTWARE_SELECTOR: `div[aria-label='Streaming software' i][role='radio' i]`,
+	STREAM_KEY_INPUT_SELECTOR: `input[aria-label='Stream key' i]`,
+	STREAM_SERVER_URL_SELECTOR: `input[value='rtmps://live-api-s.facebook.com:443/rtmp/']`,
+	CHECKBOX_SELECTOR: `div[role='checkbox' i]`,
+	TEXT_BOX_SELECTOR: `input[type='text' i]`,
+	DESCRIPTION_SELECTOR: `div[aria-label='Description (required)' i][role='textbox' i]`,
+	INPUT_LETTER_BOX_SELECTOR: `input[dir='ltr' i][type='text' i]`,
+	DESCRIPTION_PLACEHOLDER_SELECTOR: `div[aria-describedby^='placeholder-' i]`,
+	PAGE_QUALITY_PAGE_SPAN_SELECTOR: `span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x3x7a5m.x6prxxf.xvq8zen.xk50ysn.xzsf02u.x1yc453h`,
+	SEE_MORE_SELECTOR: `div[aria-label^='see more' i][role='button' i]`,
+	GAMING_PAGE_CHECK_SELECTOR: `input[aria-label='Tag a game (ex: Fortnite)' i]`,
+	GAMING_PAGE_CHECK_SELECTOR_ALT: `input[aria-label='Tag a game (e.g. Fortnite)' i]`,
+	TAG_A_GAME_SELECTOR: `div[aria-label='Tag game' i][role='button' i]`,
+	GO_LIVE_SELECTOR: `div[aria-label='Go live' i][role='button' i]`,
+	LIVE_VIDEO_ENDED_SELECTOR: `div[aria-label='Live Video Ended' i][role='button' i][aria-disabled='true' i]`,
+	QUICK_ACTIONS_SELECTOR: `div.x78zum5.xdt5ytf.xq8finb.x1e56ztr.x1n2onr6.x14vqqas.xqcrz7y`,
+	CONFIRM_BUTTON_SELECTOR: `div[aria-label='Confirm' i][role='button' i]`,
+
+	ADD_A_GROUP_TO_PROMOTE_TEXT: "add a group to promote",
+	AUDIENCE_SETTINGS_TEXT: "audience settings",
+	TITLE_DESCRIPTION_TEXT: "what's your live video about?",
+	FALSE_KEYWORD: "false",
+	ADVANCED_SETTINGS_TEXT: "advanced settings",
+	PERSISTENT_STREAM_KEY_TEXT: "persistent stream key",
+	GO_LIVE_BUTTON_TEXT: "go live",
+	STRIKE_IDENTIFIER_TEXT: "piece of content",
+	DELETE_AND_RETURN_TEXT: [
+		"delete video and return to page",
+		"delete video & return to page",
+		"delete video & return to news feed",
+	],
+
+	GROUP_NAME: configData.groupName,
+	AUDIENCE_RESTRICTION: configData.audienceRestriction,
+
+	PAGE_QUALITY_PAGE: `https://www.facebook.com/settings?tab=profile_quality`,
+};

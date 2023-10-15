@@ -1,9 +1,9 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
-const constants = require("../constants");
-const { chromeArgs } = require("./chrome-args");
+import { constants } from "../constants.js";
+import { chromeArgs } from "./chrome-args.js";
 
-async function addStartupPageInChrome(profiles, webAddress) {
+export async function addStartupPageInChrome(profiles, webAddress) {
 	// LAUNCH BROWSER WITH SET CONFIGURATION
 	for (let index in profiles) {
 		const browser = await puppeteer.launch({
@@ -57,5 +57,3 @@ async function addStartupPageInChrome(profiles, webAddress) {
 
 	process.stdout.write("\n");
 }
-
-module.exports = addStartupPageInChrome;

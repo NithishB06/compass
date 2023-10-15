@@ -1,10 +1,8 @@
-const { execSync } = require("child_process");
-const constants = require("../constants");
+import { execSync } from "child_process";
+import { constants } from "../constants.js";
 
-const killChromeProcesses = () => {
+export const killChromeProcesses = () => {
 	try {
 		execSync(constants.CHROME_KILL_COMMAND, { stdio: "ignore" });
 	} catch {}
 };
-
-module.exports = killChromeProcesses;
