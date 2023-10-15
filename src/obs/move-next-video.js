@@ -1,7 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function moveNextVideo(sourceName) {
+export async function moveNextVideo(sourceName) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	await obs.call("TriggerMediaInputAction", {
@@ -11,5 +11,3 @@ async function moveNextVideo(sourceName) {
 
 	await obs.disconnect();
 }
-
-module.exports = moveNextVideo;

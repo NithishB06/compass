@@ -1,11 +1,12 @@
-const killChromeProcesses = require("./chrome/kill-chrome");
-const constants = require("./constants");
-const addHomePageInChrome = require("./chrome/add-homepage");
-const addStartupPageInChrome = require("./chrome/add-startup");
-const blockNotificationsInChrome = require("./chrome/block-notifications");
-const profiles = require("./util/generate-profile-list");
-const userInteraction = require("./util/user-interaction");
-const interactHomePagePosts = require("./facebook/interact-homepage-posts");
+import { killChromeProcesses } from "./chrome/kill-chrome.js";
+import { constants } from "./constants.js";
+import { addHomePageInChrome } from "./chrome/add-homepage.js";
+import { addStartupPageInChrome } from "./chrome/add-startup.js";
+import { blockNotificationsInChrome } from "./chrome/block-notifications.js";
+import { profiles } from "./util/generate-profile-list.js";
+import { userInteraction } from "./util/user-interaction.js";
+import { interactHomePagePosts } from "./facebook/interact-homepage-posts.js";
+import { autoStreamVideos } from "./facebook/auto-stream.js";
 
 // KILLS ALL EXISTING CHROME PROCESSES
 killChromeProcesses();
@@ -40,20 +41,34 @@ function chromeProfileSetup() {
 		}
 	}
 
-	chromeActionPromise.catch((err) => {
-		console.log("Error: ", err);
-	});
+	chromeActionPromise.catch();
 }
 
 function interactWithFBPostsHomePage() {
 	if (profiles) {
-		interactHomePagePosts(profiles[0]).catch((err) => {
-			console.log("Error: ", err);
-		});
+		interactHomePagePosts(profiles[0]).catch();
 	} else {
 		console.log(
 			"[CONFIG]: No profile listed to interact with facebook posts in homepage"
 		);
+	}
+}
+
+async function facebookAutoStream() {
+	try {
+		var videoNumber = 1;
+		while (videoNumber <= constants.NUMBER_OF_VIDEOS_IN_PLAYLIST) {
+			if (videoNumber != 1) {
+				await delay(constants.INTERVAL_BETWEEN_STREAMS);
+			}
+
+			console.log(`Video [${videoNumber}] ready to be streamed`);
+
+			killChromeProcesses();
+			await autoStreamVideos(profiles[0]);
+		}
+	} catch (err) {
+		console.log(err);
 	}
 }
 
@@ -62,5 +77,7 @@ userInteraction().then((userInput) => {
 		chromeProfileSetup();
 	} else if (userInput == 2) {
 		interactWithFBPostsHomePage();
+	} else if (userInput == 3) {
+		facebookAutoStream();
 	}
 });

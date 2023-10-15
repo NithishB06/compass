@@ -1,7 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function setStreamStatus(action) {
+export async function setStreamStatus(action) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	if (action == "start") {
@@ -16,5 +16,3 @@ async function setStreamStatus(action) {
 
 	await obs.disconnect();
 }
-
-module.exports = setStreamStatus;

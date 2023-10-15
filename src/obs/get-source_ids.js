@@ -1,7 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function getSourceIds(sceneName, sourceName) {
+export async function getSourceIds(sceneName, sourceName) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 	const response = await obs.call("GetSceneItemList", { sceneName });
 
@@ -12,5 +12,3 @@ async function getSourceIds(sceneName, sourceName) {
 		}
 	}
 }
-
-module.exports = getSourceIds;

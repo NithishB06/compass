@@ -1,7 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function controlMedia(sourceName, action) {
+export async function controlMedia(sourceName, action) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	var mediaAction = "OBS_WEBSOCKET_MEDIA_INPUT_ACTION_PLAY";
@@ -17,5 +17,3 @@ async function controlMedia(sourceName, action) {
 
 	await obs.disconnect();
 }
-
-module.exports = controlMedia;

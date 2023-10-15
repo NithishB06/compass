@@ -1,12 +1,12 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
-const millisecondsToTimeStamp = require("../util/convert-milliseconds");
-const {
-	currentDateTimeString,
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
+import { millisecondsToTimeStamp } from "../util/convert-milliseconds.js";
+import {
+	getDateString,
 	getScreenshotSavePath,
-} = require("../util/screenshot-helper");
+} from "../util/screenshot-helper.js";
 
-async function fetchOBSStrikeStatus(sourceName) {
+export async function fetchOBSStrikeStatus(sourceName) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	const { mediaCursor, mediaDuration } = await obs.call("GetMediaInputStatus", {
@@ -14,6 +14,8 @@ async function fetchOBSStrikeStatus(sourceName) {
 	});
 
 	const directoryPath = getScreenshotSavePath("obs");
+
+	var currentDateTimeString = getDateString();
 
 	const imageFilePath = `${directoryPath}\\${currentDateTimeString}.png`;
 
@@ -34,5 +36,3 @@ async function fetchOBSStrikeStatus(sourceName) {
 		imagePath: imageFilePath,
 	};
 }
-
-module.exports = fetchOBSStrikeStatus;

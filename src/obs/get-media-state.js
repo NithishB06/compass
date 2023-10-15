@@ -1,7 +1,7 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function getMediaState(sourceName) {
+export async function getMediaState(sourceName) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	const mediaState = (
@@ -12,5 +12,3 @@ async function getMediaState(sourceName) {
 
 	return mediaState;
 }
-
-module.exports = getMediaState;

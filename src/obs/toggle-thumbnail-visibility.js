@@ -1,7 +1,11 @@
-const { obs, hostString } = require("./obs-ws-init");
-const constants = require("../constants");
+import { obs, hostString } from "./obs-ws-init.js";
+import { constants } from "../constants.js";
 
-async function toggleThumbnailVisibility(sceneName, sceneItemId, visible) {
+export async function toggleThumbnailVisibility(
+	sceneName,
+	sceneItemId,
+	visible
+) {
 	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
 	await obs.call("SetSceneItemEnabled", {
@@ -12,5 +16,3 @@ async function toggleThumbnailVisibility(sceneName, sceneItemId, visible) {
 
 	await obs.disconnect();
 }
-
-module.exports = toggleThumbnailVisibility;

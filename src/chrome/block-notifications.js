@@ -1,9 +1,9 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
-const constants = require("../constants");
-const { chromeArgs } = require("./chrome-args");
+import { constants } from "../constants.js";
+import { chromeArgs } from "./chrome-args.js";
 
-async function blockNotificationsInChrome(profiles) {
+export async function blockNotificationsInChrome(profiles) {
 	// LAUNCH BROWSER WITH SET CONFIGURATION
 	for (let index in profiles) {
 		const browser = await puppeteer.launch({
@@ -41,5 +41,3 @@ async function blockNotificationsInChrome(profiles) {
 
 	process.stdout.write("\n");
 }
-
-module.exports = blockNotificationsInChrome;
