@@ -92,6 +92,8 @@ export const constants = {
 	LIVE_VIDEO_ENDED_SELECTOR: `div[aria-label='Live Video Ended' i][role='button' i][aria-disabled='true' i]`,
 	QUICK_ACTIONS_SELECTOR: `div.x78zum5.xdt5ytf.xq8finb.x1e56ztr.x1n2onr6.x14vqqas.xqcrz7y`,
 	CONFIRM_BUTTON_SELECTOR: `div[aria-label='Confirm' i][role='button' i]`,
+	END_LIVE_VIDEO_SELECTOR: `div[aria-label='End Live Video' i][role='button' i]`,
+	CONFIRM_END_LIVE_VIDEO_SELECTOR: `div[aria-label='End' i][role='button' i]`,
 
 	ADD_A_GROUP_TO_PROMOTE_TEXT: "add a group to promote",
 	AUDIENCE_SETTINGS_TEXT: "audience settings",

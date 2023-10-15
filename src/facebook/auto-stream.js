@@ -326,6 +326,8 @@ export async function autoStreamVideos(profile) {
 
 		var nowPlusXMinutes = addMinutes(new Date(), constants.LIVE_DURATION);
 		var liveJustStarted = true;
+		var videoDeleted = false;
+
 		while (new Date() < nowPlusXMinutes) {
 			if (liveJustStarted) {
 				await delay(20);
@@ -353,6 +355,7 @@ export async function autoStreamVideos(profile) {
 				await confirmDeleteButton.click();
 
 				console.log("Video abruptly ended due to Strike");
+				videoDeleted = true;
 
 				var obsStrikeStats = await fetchOBSStrikeStatus(
 					constants.MEDIA_SOURCE_NAME
@@ -378,6 +381,51 @@ export async function autoStreamVideos(profile) {
 
 				break;
 			} catch {}
+		}
+
+		if (!videoDeleted) {
+			var endLiveVideoButton = await page.$(constants.END_LIVE_VIDEO_SELECTOR);
+			await endLiveVideoButton.click();
+
+			await page.waitForSelector(constants.CONFIRM_END_LIVE_VIDEO_SELECTOR);
+
+			var endLiveVideoConfirmButton = await page.$(
+				constants.CONFIRM_END_LIVE_VIDEO_SELECTOR
+			);
+			await endLiveVideoConfirmButton.click();
+
+			await page.waitForSelector(constants.QUICK_ACTIONS_SELECTOR);
+
+			deleteVideoAndReturn = (
+				await page.$$(constants.QUICK_ACTIONS_SELECTOR)
+			).at(-1);
+			await deleteVideoAndReturn.click();
+
+			await page.waitForSelector(constants.CONFIRM_BUTTON_SELECTOR);
+
+			confirmDeleteButton = (
+				await page.$$(constants.CONFIRM_BUTTON_SELECTOR)
+			).at(-1);
+
+			await confirmDeleteButton.click();
+
+			console.log("Graceful delete successfully completed");
+
+			// HANDLE OBS - FOR GRACEFUL DELETION //
+			await setStreamStatus("stop");
+			await moveNextVideo(constants.MEDIA_SOURCE_NAME);
+			await delay(1);
+			await toggleThumbnailVisibility(
+				constants.SCENE_NAME,
+				thumbnailSourceId,
+				true
+			);
+
+			await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
+			await delay(5);
+
+			console.log("Handled graceful deletion");
+			console.log("------------------------------");
 		}
 
 		await browser.close();
