@@ -14,6 +14,10 @@ import { setStreamStatus } from "../obs/set-stream-status.js";
 import { addMinutes } from "../util/add-minutes-to-date.js";
 import clipboard from "clipboardy";
 import { sendTelegramMessage } from "../telegram/send-message.js";
+import {
+	getDateString,
+	getScreenshotSavePath,
+} from "../util/screenshot-helper.js";
 
 export async function autoStreamVideos(profile) {
 	try {
@@ -443,5 +447,10 @@ export async function autoStreamVideos(profile) {
 	} catch (error) {
 		console.log(error);
 		sendTelegramMessage(`An error occured: ${error}`);
+		await page.screenshot({
+			path: `${getScreenshotSavePath(
+				"facebook"
+			)}\\${currentDateTimeString}.png`,
+		});
 	}
 }
