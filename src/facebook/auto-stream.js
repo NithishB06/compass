@@ -127,6 +127,8 @@ export async function autoStreamVideos(profile) {
 		sendTelegramMessage(`Total followers: ${followers}`);
 		sendTelegramMessage(`Total strikes: ${totalStrikes}`);
 
+		await delay(1);
+
 		// GO TO LIVE SETUP URL AND WAIT FOR FULL PAGE TO LOAD
 		await page.goto(constants.LIVE_SETUP_URL);
 		// await page.waitForSelector(constants.SWITCH_SELECTOR);
@@ -143,6 +145,8 @@ export async function autoStreamVideos(profile) {
 		for (let closeButton of closeButtons) {
 			await closeButton.click();
 		}
+
+		await delay(1);
 
 		// FIND ALL BUTTONS AND LIST DOWN ADD A GROUP, AUDIENCE SETTINGS AND TITLE DESCRIPTION BUTTONS
 		var buttons = await page.$$(constants.BUTTON_SELECTOR);
@@ -163,6 +167,8 @@ export async function autoStreamVideos(profile) {
 				titleDescriptionButton = button;
 			}
 		}
+
+		await delay(1);
 
 		// CLICK ON ADD A GROUP BUTTON AND WAIT FOR FULL LOAD
 		await addGroupButton.click();
@@ -191,7 +197,9 @@ export async function autoStreamVideos(profile) {
 		await page.waitForSelector(constants.REMOVE_BUTTON_SELECTOR, {
 			visible: false,
 		});
+
 		await delay(1);
+
 		// CLICK ON AUDIENCE SETTINGS AND WAIT FOR OPTION POPUP
 		await audienceSettingsButton.click();
 		await page.waitForSelector(constants.SAVE_BUTTON_SELECTOR);
@@ -254,12 +262,16 @@ export async function autoStreamVideos(profile) {
 			}
 		}
 
+		await delay(1);
+
 		// ADD TO STORY
 		var checkBox = await page.$(constants.CHECKBOX_SELECTOR);
 		var checkBoxStatus = await checkBox.evaluate((el) => el.ariaChecked);
 		if (checkBoxStatus == constants.FALSE_KEYWORD) {
 			await checkBox.click();
 		}
+
+		await delay(1);
 
 		// READ TITLE AND DESCRIPTION
 		const title = readTextFile("title.txt");
