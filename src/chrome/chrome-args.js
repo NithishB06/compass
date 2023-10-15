@@ -37,5 +37,5 @@ export const chromeArgs = [
 	"--use-gl=swiftshader",
 	"--use-mock-keychain",
 	"--disable-features=site-per-process",
-	`--window-size=${constants.CHROME_VIEW_PORT_WIDTH},${chrome.CHROME_VIEW_PORT_HEIGHT}`,
+	`--window-size=${constants.CHROME_VIEW_PORT_WIDTH},${constants.CHROME_VIEW_PORT_HEIGHT}`,
 ];
