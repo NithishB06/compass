@@ -75,10 +75,10 @@ async function facebookAutoStream() {
 			}
 
 			console.log(
-				`[${profiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
+				`[${streamProfiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
 			);
 			sendTelegramMessage(
-				`[${profiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
+				`[${streamProfiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
 			);
 
 			killChromeProcesses();
