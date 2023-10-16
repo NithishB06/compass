@@ -82,22 +82,34 @@ async function facebookAutoStream() {
 			);
 
 			killChromeProcesses();
-			var profileReturn = await autoStreamVideos(streamProfiles[profileIndex]);
-
-			if (profileReturn) {
-				streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
-				console.log(`Removed ${profileReturn} from list of streaming profiles`);
-				sendTelegramMessage(
-					`Removed ${profileReturn} from list of streaming profiles`
+			if (streamProfiles.length) {
+				var profileReturn = await autoStreamVideos(
+					streamProfiles[profileIndex]
 				);
-			}
 
-			profileIndex += 1;
-			if (profileIndex == streamProfiles.length) {
-				profileIndex = 0;
-			}
+				if (profileReturn) {
+					streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
+					console.log(
+						`Removed ${profileReturn} from list of streaming profiles`
+					);
+					sendTelegramMessage(
+						`Removed ${profileReturn} from list of streaming profiles`
+					);
+				}
 
-			videoNumber += 1;
+				profileIndex += 1;
+				if (profileIndex == streamProfiles.length) {
+					profileIndex = 0;
+				}
+
+				videoNumber += 1;
+			} else {
+				console.log("All profiles exhausted, quitting auto-stream");
+				sendTelegramMessage(
+					"All admin profiles exhausted, terminating auto stream"
+				);
+				return "";
+			}
 		}
 	} catch (err) {
 		console.log(err);
