@@ -73,8 +73,12 @@ async function facebookAutoStream() {
 				await delay(constants.INTERVAL_BETWEEN_STREAMS * 60);
 			}
 
-			console.log(`Video ${videoNumber} ready to be streamed`);
-			sendTelegramMessage(`Video ${videoNumber} ready to be streamed`);
+			console.log(
+				`[${profiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
+			);
+			sendTelegramMessage(
+				`[${profiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
+			);
 
 			killChromeProcesses();
 			await autoStreamVideos(profiles[profileIndex]);
