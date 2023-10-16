@@ -403,7 +403,10 @@ export async function autoStreamVideos(profile) {
 				console.log("Handled video abrupt deletion");
 				console.log("------------------------------");
 
-				break;
+				await browser.close();
+				return profile;
+
+				// break;
 			} catch {}
 		}
 

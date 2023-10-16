@@ -61,11 +61,12 @@ async function facebookAutoStream() {
 	try {
 		var videoNumber = 1;
 		var profileIndex = 0;
+		var streamProfiles = profiles.slice(0);
 
 		await setPersistentKey(constants.PERSISTENT_KEY);
 
 		sendTelegramMessage(
-			`Initializing auto-stream for ${constants.NUMBER_OF_VIDEOS_IN_PLAYLIST} video(s)`
+			`Auto Stream Initializing:\nNumber of video(s): ${constants.NUMBER_OF_VIDEOS_IN_PLAYLIST}\nStream duration: ${constants.LIVE_DURATION}\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS}\nNumber of admins: ${profiles.length}`
 		);
 
 		while (videoNumber <= constants.NUMBER_OF_VIDEOS_IN_PLAYLIST) {
@@ -81,10 +82,18 @@ async function facebookAutoStream() {
 			);
 
 			killChromeProcesses();
-			await autoStreamVideos(profiles[profileIndex]);
+			var profileReturn = await autoStreamVideos(streamProfiles[profileIndex]);
+
+			if (profileReturn) {
+				streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
+				console.log(`Removed ${profileReturn} from list of streaming profiles`);
+				sendTelegramMessage(
+					`Removed ${profileReturn} from list of streaming profiles`
+				);
+			}
 
 			profileIndex += 1;
-			if (profileIndex == profiles.length) {
+			if (profileIndex == streamProfiles.length) {
 				profileIndex = 0;
 			}
 

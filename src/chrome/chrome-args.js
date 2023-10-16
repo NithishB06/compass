@@ -38,4 +38,5 @@ export const chromeArgs = [
 	"--use-mock-keychain",
 	"--disable-features=site-per-process",
 	`--window-size=${constants.CHROME_VIEW_PORT_WIDTH},${constants.CHROME_VIEW_PORT_HEIGHT}`,
+	// "--start-maximized",
 ];
