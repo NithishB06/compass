@@ -60,6 +60,7 @@ function interactWithFBPostsHomePage() {
 async function facebookAutoStream() {
 	try {
 		var videoNumber = 1;
+		var profileIndex = 0;
 
 		await setPersistentKey(constants.PERSISTENT_KEY);
 
@@ -73,9 +74,15 @@ async function facebookAutoStream() {
 			}
 
 			console.log(`Video ${videoNumber} ready to be streamed`);
+			sendTelegramMessage(`Video ${videoNumber} ready to be streamed`);
 
 			killChromeProcesses();
-			await autoStreamVideos(profiles[0]);
+			await autoStreamVideos(profiles[profileIndex]);
+
+			profileIndex += 1;
+			if (profileIndex == profiles.length) {
+				profileIndex = 0;
+			}
 
 			videoNumber += 1;
 		}
