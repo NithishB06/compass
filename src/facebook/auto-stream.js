@@ -150,7 +150,14 @@ export async function autoStreamVideos(profile) {
 		await goLiveSetupButton.click();
 
 		// await page.waitForNavigation();
-		await page.waitForSelector(constants.SWITCH_SELECTOR);
+		try {
+			await page.waitForSelector(constants.SWITCH_SELECTOR);
+		} catch {
+			await sendTelegramMessage(
+				`${profile} post blocked, proceeding to exclude from the list of profiles`
+			);
+			return profile;
+		}
 
 		// CLOSE ALL POPUPS BY CLICKING ON CLOSE BUTTON
 		var closeButtons = await page.$$(constants.CLOSE_BUTTON_SELECTOR);
