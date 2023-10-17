@@ -65,8 +65,8 @@ async function facebookAutoStream() {
 
 		await setPersistentKey(constants.PERSISTENT_KEY);
 
-		sendTelegramMessage(
-			`Auto Stream Initializing:\nNumber of video(s): ${constants.NUMBER_OF_VIDEOS_IN_PLAYLIST}\nStream duration: ${constants.LIVE_DURATION}\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS}\nNumber of admins: ${profiles.length}`
+		await sendTelegramMessage(
+			`Auto Stream Initializing:\nNumber of video(s): ${constants.NUMBER_OF_VIDEOS_IN_PLAYLIST}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}`
 		);
 
 		while (videoNumber <= constants.NUMBER_OF_VIDEOS_IN_PLAYLIST) {
@@ -77,7 +77,7 @@ async function facebookAutoStream() {
 			console.log(
 				`[${streamProfiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
 			);
-			sendTelegramMessage(
+			await sendTelegramMessage(
 				`[${streamProfiles[profileIndex]}] - Video ${videoNumber} ready to be streamed`
 			);
 
@@ -92,20 +92,20 @@ async function facebookAutoStream() {
 					console.log(
 						`Removed ${profileReturn} from list of streaming profiles`
 					);
-					sendTelegramMessage(
+					await sendTelegramMessage(
 						`Removed ${profileReturn} from list of streaming profiles`
 					);
 				}
 
 				profileIndex += 1;
-				if (profileIndex == streamProfiles.length) {
+				if (profileIndex >= streamProfiles.length) {
 					profileIndex = 0;
 				}
 
 				videoNumber += 1;
 			} else {
 				console.log("All profiles exhausted, quitting auto-stream");
-				sendTelegramMessage(
+				await sendTelegramMessage(
 					"All admin profiles exhausted, terminating auto stream"
 				);
 				return "";

@@ -57,7 +57,9 @@ export async function autoStreamVideos(profile) {
 		page.setDefaultTimeout(10000);
 
 		// VISITS THE PAGE URL
-		await page.goto(constants.LIVE_SETUP_PAGE_URL);
+		await page.goto(constants.LIVE_SETUP_PAGE_URL, {
+			waitUntil: "networkidle0",
+		});
 		await page.setViewport({
 			width: constants.CHROME_VIEW_PORT_WIDTH,
 			height: constants.CHROME_VIEW_PORT_HEIGHT,
@@ -82,7 +84,13 @@ export async function autoStreamVideos(profile) {
 			await page.waitForNavigation();
 		}
 
-		// CHECK FOLLOWER COUNT BEFORE STREAM RUN
+		// CHECK PAGE NAME AND FOLLOWER COUNT BEFORE STREAM RUN
+
+		const headings = await page.$$(constants.HEADING_SELECTOR);
+		const pageNameElement = headings.at(-1);
+
+		const pageName = await pageNameElement.evaluate((el) => el.textContent);
+
 		const likesAndFollowers = await page.$$(
 			constants.LIKES_AND_FOLLOWERS_SELECTOR
 		);
@@ -94,7 +102,9 @@ export async function autoStreamVideos(profile) {
 
 		// CHECK STRIKE COUNT BEFORE STREAM RUN
 		var totalStrikes = 0;
-		await page.goto(constants.PAGE_QUALITY_PAGE);
+		await page.goto(constants.PAGE_QUALITY_PAGE, {
+			waitUntil: "networkidle0",
+		});
 		// await page.waitForNavigation();
 
 		const pageQualitySpanSelectors = await page.$$(
@@ -121,14 +131,18 @@ export async function autoStreamVideos(profile) {
 			totalStrikes += additionalStrikeCount;
 		}
 
+		console.log("Page Name: ", pageName);
 		console.log("Total Followers: ", followers);
 		console.log("Total Strikes: ", totalStrikes);
 
-		sendTelegramMessage(`Total followers: ${followers}`);
-		sendTelegramMessage(`Total strikes: ${totalStrikes}`);
+		await sendTelegramMessage(
+			`Pre-stream stats:\nPage name: ${pageName}\nTotal followers: ${followers}\nTotal strikes: ${totalStrikes}`
+		);
 
 		// GO TO LIVE SETUP URL AND WAIT FOR FULL PAGE TO LOAD
-		await page.goto(constants.LIVE_SETUP_URL);
+		await page.goto(constants.LIVE_SETUP_URL, {
+			waitUntil: "networkidle0",
+		});
 		// await page.waitForSelector(constants.SWITCH_SELECTOR);
 		await page.waitForSelector(constants.LIVE_SETUP_GO_LIVE_BUTTON);
 
@@ -373,7 +387,7 @@ export async function autoStreamVideos(profile) {
 				await confirmDeleteButton.click();
 
 				console.log("Video abruptly ended due to Strike");
-				sendTelegramMessage(
+				await sendTelegramMessage(
 					"Video taken down due to strike, handled abrupt deletion"
 				);
 				videoDeleted = true;
@@ -383,7 +397,7 @@ export async function autoStreamVideos(profile) {
 				);
 
 				console.log("OBS Strike Stats: ", obsStrikeStats);
-				sendTelegramMessage(
+				await sendTelegramMessage(
 					`OBS Strike Stats: \nCursor: ${obsStrikeStats.currentCursor}\nDuration: ${obsStrikeStats.totalDuration}\nImage path: ${obsStrikeStats.imagePath}`
 				);
 
@@ -437,7 +451,7 @@ export async function autoStreamVideos(profile) {
 			await confirmDeleteButton.click();
 
 			console.log("Graceful delete successfully completed");
-			sendTelegramMessage("Video successfully streamed and deleted");
+			await sendTelegramMessage("Video successfully streamed and deleted");
 
 			// HANDLE OBS - FOR GRACEFUL DELETION //
 			await setStreamStatus("stop");
@@ -459,6 +473,6 @@ export async function autoStreamVideos(profile) {
 		await browser.close();
 	} catch (error) {
 		console.log(error);
-		sendTelegramMessage(`An error occured: ${error}`);
+		await gramMessage(`An error occured: ${error}`);
 	}
 }
