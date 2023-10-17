@@ -314,13 +314,17 @@ export async function autoStreamVideos(profile) {
 			).at(-1);
 
 			await titleTextBox.click();
-			await page.keyboard.type(title);
+			clipboard.writeSync(title);
+			await page.keyboard.down("ControlLeft");
+			await page.keyboard.press("KeyV");
 
 			const descriptionTextBox = await page.$(
 				constants.DESCRIPTION_PLACEHOLDER_SELECTOR
 			);
 			await descriptionTextBox.click();
-			await page.keyboard.type(description);
+			clipboard.writeSync(description);
+			await page.keyboard.down("ControlLeft");
+			await page.keyboard.press("KeyV");
 		}
 
 		// START OBS ACTIONS
