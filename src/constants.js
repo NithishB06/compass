@@ -58,6 +58,7 @@ export const constants = {
 	THUMBNAIL_SOURCE_NAME: configData.thumbnailSourceName,
 	MEDIA_SOURCE_NAME: configData.mediaSourceName,
 	BGM_SOURCE_NAME: configData.bgmSourceName,
+	BACKUP_MEDIA_SOURCE_NAME: configData.backupMediaSourceName,
 
 	LIVE_DURATION: configData.liveDuration,
 	NUMBER_OF_VIDEOS_IN_PLAYLIST: configData.numberOfVideosInPlaylist,
@@ -95,6 +96,7 @@ export const constants = {
 	CONFIRM_BUTTON_SELECTOR: `div[aria-label='Confirm' i][role='button' i]`,
 	END_LIVE_VIDEO_SELECTOR: `div[aria-label='End Live Video' i][role='button' i]`,
 	CONFIRM_END_LIVE_VIDEO_SELECTOR: `div[aria-label='End' i][role='button' i]`,
+	SPAN_TAGS_DURING_LIVE_SELECTOR: `span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x676frb.x1lkfr7t.x1lbecb7.x1s688f.xzsf02u.x1yc453h`,
 
 	ADD_A_GROUP_TO_PROMOTE_TEXT: "add a group to promote",
 	AUDIENCE_SETTINGS_TEXT: "audience settings",

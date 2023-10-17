@@ -3,7 +3,7 @@ import { constants } from "../constants.js";
 import { chromeArgs } from "../chrome/chrome-args.js";
 import { readTextFile } from "../util/read-stream-titles.js";
 import { delay } from "../util/add-delay.js";
-import { getSourceIds } from "../obs/get-source_ids.js";
+import { getSourceId } from "../obs/get-source-id.js";
 import { getMediaState } from "../obs/get-media-state.js";
 import { toggleThumbnailVisibility } from "../obs/toggle-thumbnail-visibility.js";
 import { controlMedia } from "../obs/control-media.js";
@@ -14,6 +14,7 @@ import { setStreamStatus } from "../obs/set-stream-status.js";
 import { addMinutes } from "../util/add-minutes-to-date.js";
 import clipboard from "clipboardy";
 import { sendTelegramMessage } from "../telegram/send-message.js";
+import { TimeoutError } from "puppeteer/Errors";
 import {
 	getDateString,
 	getScreenshotSavePath,
@@ -22,9 +23,24 @@ import {
 export async function autoStreamVideos(profile) {
 	try {
 		// OBS BASIC SETUP //
-		var thumbnailSourceId = await getSourceIds(
+		var thumbnailSourceId = await getSourceId(
 			constants.SCENE_NAME,
 			constants.THUMBNAIL_SOURCE_NAME
+		);
+
+		var BGMSourceId = await getSourceId(
+			constants.SCENE_NAME,
+			constants.BGM_SOURCE_NAME
+		);
+
+		var mediaSourceId = await getSourceId(
+			constants.SCENE_NAME,
+			constants.MEDIA_SOURCE_NAME
+		);
+
+		var backupMediaSourceId = await getSourceId(
+			constants.SCENE_NAME,
+			constants.BACKUP_MEDIA_SOURCE_NAME
 		);
 
 		var mediaState = await getMediaState(constants.MEDIA_SOURCE_NAME);
@@ -37,11 +53,25 @@ export async function autoStreamVideos(profile) {
 			true
 		);
 
+		await toggleThumbnailVisibility(constants.SCENE_NAME, BGMSourceId, false);
+
+		await toggleThumbnailVisibility(
+			constants.SCENE_NAME,
+			backupMediaSourceId,
+			false
+		);
+
+		await toggleThumbnailVisibility(constants.SCENE_NAME, mediaSourceId, true);
+
 		await controlAudio(constants.MEDIA_SOURCE_NAME, "unmute");
+
+		await controlAudio(constants.BACKUP_MEDIA_SOURCE_NAME, "unmute");
 
 		await controlAudio(constants.BGM_SOURCE_NAME, "mute");
 
 		await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
+
+		await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
 
 		await controlMedia(constants.BGM_SOURCE_NAME, "play");
 
@@ -370,6 +400,10 @@ export async function autoStreamVideos(profile) {
 		var nowPlusXMinutes = addMinutes(new Date(), constants.LIVE_DURATION);
 		var liveJustStarted = true;
 		var videoDeleted = false;
+		var viewCountSpan;
+		var viewerCountRaw;
+		var viewerCount;
+		var conservativeMode = false;
 
 		while (new Date() < nowPlusXMinutes) {
 			if (liveJustStarted) {
@@ -430,11 +464,52 @@ export async function autoStreamVideos(profile) {
 				console.log("Handled video abrupt deletion");
 				console.log("------------------------------");
 
+				if (conservativeMode) {
+					console.log(
+						`Stream met with strike even after running in conservative mode`
+					);
+					await sendTelegramMessage(
+						`Stream met with strike even after running in conservative mode`
+					);
+				}
+
 				await browser.close();
 				return profile;
 
 				// break;
-			} catch {}
+			} catch (e) {
+				if (e instanceof TimeoutError) {
+					viewCountSpan = (
+						await page.$$(constants.SPAN_TAGS_DURING_LIVE_SELECTOR)
+					)[4];
+					viewerCountRaw = await viewCountSpan.evaluate((el) => el.textContent);
+
+					if (viewerCountRaw.includes(",")) {
+						viewerCountRaw = viewerCountRaw.replace(",", "");
+					}
+
+					viewerCount = Number(viewerCountRaw);
+					if (viewerCount > 1200) {
+						await toggleThumbnailVisibility(
+							constants.SCENE_NAME,
+							backupMediaSourceId,
+							true
+						);
+
+						await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "play");
+
+						await toggleThumbnailVisibility(
+							constants.SCENE_NAME,
+							mediaSourceId,
+							false
+						);
+
+						await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
+
+						conservativeMode = true;
+					}
+				}
+			}
 		}
 
 		if (!videoDeleted) {
@@ -481,6 +556,15 @@ export async function autoStreamVideos(profile) {
 
 			console.log("Handled graceful deletion");
 			console.log("------------------------------");
+		}
+
+		if (conservativeMode) {
+			console.log(
+				`Successfully ran and deleted the video in Conservative Mode`
+			);
+			await sendTelegramMessage(
+				`Successfully ran and deleted the video in Conservative Mode`
+			);
 		}
 
 		await browser.close();
