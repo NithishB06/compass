@@ -482,6 +482,6 @@ export async function autoStreamVideos(profile) {
 		await browser.close();
 	} catch (error) {
 		console.log(error);
-		await gramMessage(`An error occured: ${error}`);
+		await sendTelegramMessage(`An error occured: ${error}`);
 	}
 }
