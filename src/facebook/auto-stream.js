@@ -387,15 +387,12 @@ export async function autoStreamVideos(profile) {
 			try {
 				await page.waitForSelector(constants.LIVE_VIDEO_ENDED_SELECTOR, {
 					timeout: 1000,
-					waitUntil: "domcontentloaded",
 				});
 				var deleteVideoAndReturn = (
 					await page.$$(constants.QUICK_ACTIONS_SELECTOR)
 				).at(-1);
 				await deleteVideoAndReturn.click();
-				await page.waitForSelector(constants.CONFIRM_BUTTON_SELECTOR, {
-					waitUntil: "domcontentloaded",
-				});
+				await page.waitForSelector(constants.CONFIRM_BUTTON_SELECTOR);
 
 				var confirmDeleteButton = (
 					await page.$$(constants.CONFIRM_BUTTON_SELECTOR)
