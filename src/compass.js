@@ -82,28 +82,24 @@ async function facebookAutoStream() {
 			);
 
 			killChromeProcesses();
-			if (streamProfiles.length) {
-				var profileReturn = await autoStreamVideos(
-					streamProfiles[profileIndex]
+			var profileReturn = await autoStreamVideos(streamProfiles[profileIndex]);
+
+			if (profileReturn) {
+				streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
+				console.log(`Removed ${profileReturn} from list of streaming profiles`);
+				await sendTelegramMessage(
+					`Removed ${profileReturn} from list of streaming profiles`
 				);
+			}
 
-				if (profileReturn) {
-					streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
-					console.log(
-						`Removed ${profileReturn} from list of streaming profiles`
-					);
-					await sendTelegramMessage(
-						`Removed ${profileReturn} from list of streaming profiles`
-					);
-				}
+			profileIndex += 1;
+			if (profileIndex >= streamProfiles.length) {
+				profileIndex = 0;
+			}
 
-				profileIndex += 1;
-				if (profileIndex >= streamProfiles.length) {
-					profileIndex = 0;
-				}
+			videoNumber += 1;
 
-				videoNumber += 1;
-			} else {
+			if (!streamProfiles.length) {
 				console.log("All profiles exhausted, quitting auto-stream");
 				await sendTelegramMessage(
 					"All admin profiles exhausted, terminating auto stream"
