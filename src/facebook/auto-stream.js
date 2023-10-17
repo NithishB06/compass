@@ -65,7 +65,7 @@ export async function autoStreamVideos(profile) {
 
 		await controlAudio(constants.MEDIA_SOURCE_NAME, "unmute");
 
-		await controlAudio(constants.BACKUP_MEDIA_SOURCE_NAME, "unmute");
+		await controlAudio(constants.BACKUP_MEDIA_SOURCE_NAME, "mute");
 
 		await controlAudio(constants.BGM_SOURCE_NAME, "mute");
 
