@@ -4,7 +4,6 @@ import { chromeArgs } from "../chrome/chrome-args.js";
 import { readTextFile } from "../util/read-stream-titles.js";
 import { delay } from "../util/add-delay.js";
 import { getSourceId } from "../obs/get-source-id.js";
-import { getMediaState } from "../obs/get-media-state.js";
 import { toggleThumbnailVisibility } from "../obs/toggle-thumbnail-visibility.js";
 import { controlMedia } from "../obs/control-media.js";
 import { controlAudio } from "../obs/control-audio.js";
@@ -28,9 +27,9 @@ export async function autoStreamVideos(profile) {
 			constants.THUMBNAIL_SOURCE_NAME
 		);
 
-		var BGMSourceId = await getSourceId(
+		var backupMediaSourceId = await getSourceId(
 			constants.SCENE_NAME,
-			constants.BGM_SOURCE_NAME
+			constants.BACKUP_MEDIA_SOURCE_NAME
 		);
 
 		var mediaSourceId = await getSourceId(
@@ -38,22 +37,11 @@ export async function autoStreamVideos(profile) {
 			constants.MEDIA_SOURCE_NAME
 		);
 
-		var backupMediaSourceId = await getSourceId(
-			constants.SCENE_NAME,
-			constants.BACKUP_MEDIA_SOURCE_NAME
-		);
-
-		var mediaState = await getMediaState(constants.MEDIA_SOURCE_NAME);
-
-		var BgmState = await getMediaState(constants.BGM_SOURCE_NAME);
-
 		await toggleThumbnailVisibility(
 			constants.SCENE_NAME,
 			thumbnailSourceId,
 			true
 		);
-
-		await toggleThumbnailVisibility(constants.SCENE_NAME, BGMSourceId, false);
 
 		await toggleThumbnailVisibility(
 			constants.SCENE_NAME,
@@ -67,13 +55,9 @@ export async function autoStreamVideos(profile) {
 
 		await controlAudio(constants.BACKUP_MEDIA_SOURCE_NAME, "mute");
 
-		await controlAudio(constants.BGM_SOURCE_NAME, "mute");
-
 		await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
 
 		await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
-
-		await controlMedia(constants.BGM_SOURCE_NAME, "play");
 
 		// ----------------- //
 
@@ -439,9 +423,16 @@ export async function autoStreamVideos(profile) {
 				);
 				videoDeleted = true;
 
-				var obsStrikeStats = await fetchOBSStrikeStatus(
-					constants.MEDIA_SOURCE_NAME
-				);
+				var obsStrikeStats = {};
+				if (conservativeMode) {
+					obsStrikeStats = await fetchOBSStrikeStatus(
+						constants.BACKUP_MEDIA_SOURCE_NAME
+					);
+				} else {
+					obsStrikeStats = await fetchOBSStrikeStatus(
+						constants.MEDIA_SOURCE_NAME
+					);
+				}
 
 				console.log("OBS Strike Stats: ", obsStrikeStats);
 				await sendTelegramMessage(
@@ -492,7 +483,7 @@ export async function autoStreamVideos(profile) {
 						}
 
 						viewerCount = Number(viewerCountRaw);
-						if (viewerCount > 1200) {
+						if (viewerCount > constants.VIEWER_COUNT_THRESHOLD) {
 							await toggleThumbnailVisibility(
 								constants.SCENE_NAME,
 								backupMediaSourceId,
@@ -501,15 +492,7 @@ export async function autoStreamVideos(profile) {
 
 							await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "play");
 
-							await toggleThumbnailVisibility(
-								constants.SCENE_NAME,
-								mediaSourceId,
-								false
-							);
-
 							await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
-
-							await moveNextVideo(constants.MEDIA_SOURCE_NAME);
 
 							conservativeMode = true;
 						}

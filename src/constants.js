@@ -57,11 +57,9 @@ export const constants = {
 	SCENE_NAME: configData.sceneName,
 	THUMBNAIL_SOURCE_NAME: configData.thumbnailSourceName,
 	MEDIA_SOURCE_NAME: configData.mediaSourceName,
-	BGM_SOURCE_NAME: configData.bgmSourceName,
 	BACKUP_MEDIA_SOURCE_NAME: configData.backupMediaSourceName,
 
 	LIVE_DURATION: configData.liveDuration,
-	NUMBER_OF_VIDEOS_IN_PLAYLIST: configData.numberOfVideosInPlaylist,
 	INTERVAL_BETWEEN_STREAMS: configData.intervalBetweenStreams,
 
 	LIVE_SETUP_PAGE_URL: configData.liveSetupPageURL,
@@ -119,4 +117,7 @@ export const constants = {
 
 	TELEGRAM_API: configData.telegramAPI,
 	TELEGRAM_CHAT_ID: configData.telegramChatId,
+
+	VIEWER_COUNT_THRESHOLD: configData.viewerCountThreshold,
+	STREAM_FOLDER_NAME: configData.streamFolderName,
 };

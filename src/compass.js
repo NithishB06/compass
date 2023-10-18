@@ -10,6 +10,9 @@ import { autoStreamVideos } from "./facebook/auto-stream.js";
 import { delay } from "./util/add-delay.js";
 import { setPersistentKey } from "./obs/set-persistent-key.js";
 import { sendTelegramMessage } from "./telegram/send-message.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { countFilesInDirectory } from "./util/get-file-count.js";
 
 // KILLS ALL EXISTING CHROME PROCESSES
 killChromeProcesses();
@@ -65,11 +68,21 @@ async function facebookAutoStream() {
 
 		await setPersistentKey(constants.PERSISTENT_KEY);
 
-		await sendTelegramMessage(
-			`Auto Stream Initializing:\nNumber of video(s): ${constants.NUMBER_OF_VIDEOS_IN_PLAYLIST}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}`
+		const __filename = fileURLToPath(import.meta.url);
+		const __dirname = path.dirname(__filename);
+
+		const pathToDirectory = path.resolve(
+			__dirname,
+			`../${constants.STREAM_FOLDER_NAME}/`
 		);
 
-		while (videoNumber <= constants.NUMBER_OF_VIDEOS_IN_PLAYLIST) {
+		const numberOfVideosInFolder = await countFilesInDirectory(pathToDirectory);
+
+		await sendTelegramMessage(
+			`Auto Stream Initializing:\nNumber of video(s): ${numberOfVideosInFolder}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}`
+		);
+
+		while (videoNumber <= numberOfVideosInFolder) {
 			if (videoNumber != 1) {
 				await delay(constants.INTERVAL_BETWEEN_STREAMS * 60);
 			}
