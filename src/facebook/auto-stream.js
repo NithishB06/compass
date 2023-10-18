@@ -509,6 +509,8 @@ export async function autoStreamVideos(profile) {
 
 							await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
 
+							await moveNextVideo(constants.MEDIA_SOURCE_NAME);
+
 							conservativeMode = true;
 						}
 					}
