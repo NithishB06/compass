@@ -52,7 +52,7 @@ export const constants = {
 	OBS_WEBSOCKET_PORT: configData.OBSWebsocketPort,
 	OBS_WEBSOCKET_PASSWORD: configData.OBSWebsocketPassword,
 
-	PERSISTENT_KEY: configData.persistentKey,
+	LIVE_SETUP_PAGES_DATA: configData.liveSetupPagesData,
 
 	SCENE_NAME: configData.sceneName,
 	THUMBNAIL_SOURCE_NAME: configData.thumbnailSourceName,
@@ -62,8 +62,6 @@ export const constants = {
 	LIVE_DURATION: configData.liveDuration,
 	INTERVAL_BETWEEN_STREAMS: configData.intervalBetweenStreams,
 
-	LIVE_SETUP_PAGE_URL: configData.liveSetupPageURL,
-	LIVE_SETUP_URL: configData.liveSetupURL,
 	LIVE_SETUP_GO_LIVE_BUTTON: `div[aria-label='Go live' i][role='button' i]`,
 	HEADING_SELECTOR: `h1`,
 	LIKES_AND_FOLLOWERS_SELECTOR: `a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.xt0b8zv.xi81zsa.x1s688f`,
