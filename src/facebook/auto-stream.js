@@ -479,34 +479,38 @@ export async function autoStreamVideos(profile) {
 				// break;
 			} catch (e) {
 				if (e instanceof TimeoutError) {
-					viewCountSpan = (
-						await page.$$(constants.SPAN_TAGS_DURING_LIVE_SELECTOR)
-					)[4];
-					viewerCountRaw = await viewCountSpan.evaluate((el) => el.textContent);
-
-					if (viewerCountRaw.includes(",")) {
-						viewerCountRaw = viewerCountRaw.replace(",", "");
-					}
-
-					viewerCount = Number(viewerCountRaw);
-					if (viewerCount > 1200) {
-						await toggleThumbnailVisibility(
-							constants.SCENE_NAME,
-							backupMediaSourceId,
-							true
+					if (!conservativeMode) {
+						viewCountSpan = (
+							await page.$$(constants.SPAN_TAGS_DURING_LIVE_SELECTOR)
+						)[4];
+						viewerCountRaw = await viewCountSpan.evaluate(
+							(el) => el.textContent
 						);
 
-						await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "play");
+						if (viewerCountRaw.includes(",")) {
+							viewerCountRaw = viewerCountRaw.replace(",", "");
+						}
 
-						await toggleThumbnailVisibility(
-							constants.SCENE_NAME,
-							mediaSourceId,
-							false
-						);
+						viewerCount = Number(viewerCountRaw);
+						if (viewerCount > 1200) {
+							await toggleThumbnailVisibility(
+								constants.SCENE_NAME,
+								backupMediaSourceId,
+								true
+							);
 
-						await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
+							await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "play");
 
-						conservativeMode = true;
+							await toggleThumbnailVisibility(
+								constants.SCENE_NAME,
+								mediaSourceId,
+								false
+							);
+
+							await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
+
+							conservativeMode = true;
+						}
 					}
 				}
 			}

@@ -17,3 +17,7 @@ export async function controlMedia(sourceName, action) {
 
 	await obs.disconnect();
 }
+
+controlMedia(constants.MEDIA_SOURCE_NAME, "pause").then(() =>
+	console.log("Video Paused")
+);

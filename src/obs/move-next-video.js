@@ -11,3 +11,7 @@ export async function moveNextVideo(sourceName) {
 
 	await obs.disconnect();
 }
+
+moveNextVideo(constants.MEDIA_SOURCE_NAME).then(() =>
+	console.log("Video moved next")
+);
