@@ -19,7 +19,7 @@ import {
 	getScreenshotSavePath,
 } from "../util/screenshot-helper.js";
 
-export async function autoStreamVideos(profile) {
+export async function autoStreamVideos(profile, pageData) {
 	try {
 		// OBS BASIC SETUP //
 		var thumbnailSourceId = await getSourceId(
@@ -71,7 +71,7 @@ export async function autoStreamVideos(profile) {
 		page.setDefaultTimeout(10000);
 
 		// VISITS THE PAGE URL
-		await page.goto(constants.LIVE_SETUP_PAGE_URL, {
+		await page.goto(pageData.pageURL, {
 			waitUntil: "networkidle0",
 		});
 		await page.setViewport({
@@ -154,7 +154,7 @@ export async function autoStreamVideos(profile) {
 		);
 
 		// GO TO LIVE SETUP URL AND WAIT FOR FULL PAGE TO LOAD
-		await page.goto(constants.LIVE_SETUP_URL, {
+		await page.goto(pageData.liveSetupURL, {
 			waitUntil: "networkidle0",
 		});
 		// await page.waitForSelector(constants.SWITCH_SELECTOR);
@@ -453,7 +453,6 @@ export async function autoStreamVideos(profile) {
 				await delay(5);
 
 				console.log("Handled video abrupt deletion");
-				console.log("------------------------------");
 
 				if (conservativeMode) {
 					console.log(
@@ -544,7 +543,6 @@ export async function autoStreamVideos(profile) {
 			await delay(5);
 
 			console.log("Handled graceful deletion");
-			console.log("------------------------------");
 		}
 
 		if (conservativeMode) {
