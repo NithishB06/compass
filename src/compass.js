@@ -66,6 +66,7 @@ async function facebookAutoStream() {
 		var profileIndex = 0;
 		var streamProfiles = profiles.slice(0);
 		var streamPages = constants.LIVE_SETUP_PAGES_DATA.slice(0);
+		var removedPageData;
 
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = path.dirname(__filename);
