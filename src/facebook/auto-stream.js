@@ -154,7 +154,7 @@ export async function autoStreamVideos(profile, pageData) {
 					followers = followers.replace(",", "");
 				}
 			}
-		} catch (error) {}
+		} catch {}
 
 		// CHECK STRIKE COUNT BEFORE STREAM RUN
 		var totalStrikes = 0;
