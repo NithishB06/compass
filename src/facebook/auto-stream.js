@@ -127,9 +127,9 @@ export async function autoStreamVideos(profile, pageData) {
 				)[0];
 				await mobileProfilePictureElement.click();
 
-				await page.waitForNavigation({
-					waitUntil: "networkidle0",
-				});
+				await page.waitForSelector(
+					constants.MOBILE_MAIN_FOLLOWER_COUNT_SELECTOR
+				);
 
 				const shortFollowerCountElement = (
 					await page.$$(constants.MOBILE_MAIN_FOLLOWER_COUNT_SELECTOR)
