@@ -68,7 +68,7 @@ export async function autoStreamVideos(profile, pageData) {
 		});
 
 		const page = (await browser.pages())[0];
-		page.setDefaultTimeout(10000);
+		page.setDefaultTimeout(20000);
 
 		// VISITS THE PAGE URL
 		await page.goto(pageData.pageURL, {
