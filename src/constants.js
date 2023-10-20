@@ -119,6 +119,7 @@ export const constants = {
 	VIEWER_COUNT_THRESHOLD: configData.viewerCountThreshold,
 	STREAM_FOLDER_NAME: configData.streamFolderName,
 
+	MANAGE_PAGE_TEXT: `manage page`,
 	MOBILE_FACEBOOK_URL: `https://m.facebook.com`,
 	MOBILE_IMAGE_SELECTORS: `i.img._1-yc.profpic`,
 	MOBILE_MAIN_FOLLOWER_COUNT_SELECTOR: `a._5b6s`,
