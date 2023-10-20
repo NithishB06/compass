@@ -95,7 +95,9 @@ export async function autoStreamVideos(profile, pageData) {
 
 			await switchConfirmButton.click();
 
-			await page.waitForNavigation();
+			await page.waitForNavigation({
+				waitUntil: "networkidle0",
+			});
 		}
 
 		// CHECK PAGE NAME AND FOLLOWER COUNT BEFORE STREAM RUN
@@ -147,8 +149,10 @@ export async function autoStreamVideos(profile, pageData) {
 					followers = followers.replace(",", "");
 				}
 			}
-		} catch {
-			console.log("Unable to pull followers from mobile view at this moment");
+		} catch (error) {
+			console.log(
+				`Unable to pull followers from mobile view at this moment. Error: ${error}`
+			);
 		}
 
 		// CHECK STRIKE COUNT BEFORE STREAM RUN
