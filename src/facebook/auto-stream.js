@@ -123,39 +123,6 @@ export async function autoStreamVideos(profile, pageData) {
 
 		var followers = followerText.split(" ")[0];
 
-		try {
-			if (followers.includes("K") || followers.includes("M")) {
-				await page.goto(constants.MOBILE_FACEBOOK_URL, {
-					waitUntil: "networkidle0",
-				});
-
-				const mobileProfilePictureElement = (
-					await page.$$(constants.MOBILE_IMAGE_SELECTORS)
-				)[0];
-				await mobileProfilePictureElement.click();
-
-				await page.waitForSelector(
-					constants.MOBILE_MAIN_FOLLOWER_COUNT_SELECTOR
-				);
-
-				const shortFollowerCountElement = (
-					await page.$$(constants.MOBILE_MAIN_FOLLOWER_COUNT_SELECTOR)
-				)[0];
-
-				await shortFollowerCountElement.click();
-
-				await page.waitForSelector(constants.MOBILE_FOLLOWER_COUNT);
-
-				const followerCountElement = await page.$(
-					constants.MOBILE_FOLLOWER_COUNT
-				);
-				followers = await followerCountElement.evaluate((el) => el.textContent);
-				if (followers.includes(",")) {
-					followers = followers.replace(",", "");
-				}
-			}
-		} catch {}
-
 		// CHECK STRIKE COUNT BEFORE STREAM RUN
 		var totalStrikes = 0;
 		await page.goto(constants.PAGE_QUALITY_PAGE, {
