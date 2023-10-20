@@ -36,6 +36,11 @@ function chromeProfileSetup() {
 					constants.CUSTOM_WEB_ADDRESS_TO_ENTER
 				);
 			});
+		} else {
+			chromeActionPromise = addStartupPageInChrome(
+				profiles,
+				constants.CUSTOM_WEB_ADDRESS_TO_ENTER
+			);
 		}
 	}
 
@@ -44,6 +49,8 @@ function chromeProfileSetup() {
 			chromeActionPromise = chromeActionPromise.then(() => {
 				return blockNotificationsInChrome(profiles);
 			});
+		} else {
+			chromeActionPromise = blockNotificationsInChrome(profiles);
 		}
 	}
 
