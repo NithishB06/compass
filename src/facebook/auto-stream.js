@@ -108,7 +108,10 @@ export async function autoStreamVideos(profile, pageData) {
 
 		for (let heading of headings) {
 			headingTextContent = await heading.evaluate((el) => el.textContent);
-			if (headingTextContent.toLowerCase() != constants.MANAGE_PAGE_TEXT) {
+			if (
+				headingTextContent.toLowerCase() != constants.MANAGE_PAGE_TEXT &&
+				headingTextContent.toLowerCase() != constants.NOTIFICATION_TEXT
+			) {
 				pageName = headingTextContent;
 				break;
 			}
