@@ -103,6 +103,10 @@ export async function autoStreamVideos(profile, pageData) {
 		// CHECK PAGE NAME AND FOLLOWER COUNT BEFORE STREAM RUN
 
 		const headings = await page.$$(constants.HEADING_SELECTOR);
+
+		for (let heading of headings) {
+			console.log(await heading.evaluate((el) => el.textContent));
+		}
 		const pageNameElement = headings.at(-1);
 
 		const pageName = await pageNameElement.evaluate((el) => el.textContent);
