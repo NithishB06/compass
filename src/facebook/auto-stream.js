@@ -147,7 +147,9 @@ export async function autoStreamVideos(profile, pageData) {
 					followers = followers.replace(",", "");
 				}
 			}
-		} catch {}
+		} catch {
+			console.log("Unable to pull followers from mobile view at this moment");
+		}
 
 		// CHECK STRIKE COUNT BEFORE STREAM RUN
 		var totalStrikes = 0;
