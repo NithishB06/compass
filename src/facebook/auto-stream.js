@@ -89,7 +89,9 @@ export async function autoStreamVideos(profile, pageData) {
 				(await page.$(constants.SWITCH_NOW_TO_PAGE_BUTTON)) || null;
 			if (pageSwitchButton) {
 				await pageSwitchButton.click();
-				await page.waitForNavigation();
+				await page.waitForSelector(constants.SEE_PAGE_BUTTON_SELECTOR, {
+					visible: true,
+				});
 			}
 		} else {
 			await pageSwitchButton.click();
@@ -101,7 +103,9 @@ export async function autoStreamVideos(profile, pageData) {
 			);
 
 			await switchConfirmButton.click();
-			await page.waitForNavigation();
+			await page.waitForSelector(constants.SEE_PAGE_BUTTON_SELECTOR, {
+				visible: true,
+			});
 		}
 
 		// CHECK FOLLOWER COUNT BEFORE STREAM RUN
