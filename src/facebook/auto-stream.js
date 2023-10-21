@@ -68,23 +68,30 @@ export async function autoStreamVideos(profile, pageData) {
 		});
 
 		const page = (await browser.pages())[0];
-		page.setDefaultTimeout(20000);
+		page.setDefaultTimeout(10000);
 
-		// VISITS THE PAGE URL
-		await page.goto(pageData.pageURL, {
-			waitUntil: "networkidle0",
-		});
 		await page.setViewport({
 			width: constants.CHROME_VIEW_PORT_WIDTH,
 			height: constants.CHROME_VIEW_PORT_HEIGHT,
 		});
 
+		// VISITS THE PAGE URL
+		await page.goto(pageData.pageURL, {
+			waitUntil: "networkidle0",
+		});
+
 		// CHECK IF THE PAGE HAS SWITCH BUTTON - TO IDENTIFY IF CURRENT LOGIN IS USER OR PAGE
-		const pageSwitchButton =
+		var pageSwitchButton =
 			(await page.$(constants.SWITCH_TO_PAGE_BUTTON)) || null;
 
-		// IF USER IS LOGGED IN THEN SWITCH TO PAGE AND GO BACK TO HOME PAGE
-		if (pageSwitchButton) {
+		if (!pageSwitchButton) {
+			pageSwitchButton =
+				(await page.$(constants.SWITCH_NOW_TO_PAGE_BUTTON)) || null;
+			if (pageSwitchButton) {
+				await pageSwitchButton.click();
+				await page.waitForNavigation();
+			}
+		} else {
 			await pageSwitchButton.click();
 
 			await page.waitForSelector(constants.SEE_ALL_PROFILES_BUTTON);
@@ -94,29 +101,10 @@ export async function autoStreamVideos(profile, pageData) {
 			);
 
 			await switchConfirmButton.click();
-
-			await page.waitForNavigation({
-				waitUntil: "networkidle0",
-			});
+			await page.waitForNavigation();
 		}
 
-		// CHECK PAGE NAME AND FOLLOWER COUNT BEFORE STREAM RUN
-
-		const headings = await page.$$(constants.HEADING_SELECTOR);
-		var headingTextContent;
-		var pageName;
-
-		for (let heading of headings) {
-			headingTextContent = await heading.evaluate((el) => el.textContent);
-			if (
-				headingTextContent.toLowerCase() != constants.MANAGE_PAGE_TEXT &&
-				headingTextContent.toLowerCase() != constants.NOTIFICATION_TEXT
-			) {
-				pageName = headingTextContent;
-				break;
-			}
-		}
-
+		// CHECK FOLLOWER COUNT BEFORE STREAM RUN
 		const likesAndFollowers = await page.$$(
 			constants.LIKES_AND_FOLLOWERS_SELECTOR
 		);
@@ -131,7 +119,6 @@ export async function autoStreamVideos(profile, pageData) {
 		await page.goto(constants.PAGE_QUALITY_PAGE, {
 			waitUntil: "networkidle0",
 		});
-		// await page.waitForNavigation();
 
 		const pageQualitySpanSelectors = await page.$$(
 			constants.PAGE_QUALITY_PAGE_SPAN_SELECTOR
@@ -157,31 +144,42 @@ export async function autoStreamVideos(profile, pageData) {
 			totalStrikes += additionalStrikeCount;
 		}
 
-		console.log("Page Name: ", pageName);
+		console.log("Page Name: ", pageData.pageName);
 		console.log("Total Followers: ", followers);
 		console.log("Total Strikes: ", totalStrikes);
 
 		await sendTelegramMessage(
-			`Pre-stream stats:\nPage name: ${pageName}\nTotal followers: ${followers}\nTotal strikes: ${totalStrikes}`
+			`Pre-stream stats:\nPage name: ${pageData.pageName}\nTotal followers: ${followers}\nTotal strikes: ${totalStrikes}`
 		);
 
 		// GO TO LIVE SETUP URL AND WAIT FOR FULL PAGE TO LOAD
 		await page.goto(pageData.liveSetupURL, {
 			waitUntil: "networkidle0",
 		});
-		// await page.waitForSelector(constants.SWITCH_SELECTOR);
-		await page.waitForSelector(constants.LIVE_SETUP_GO_LIVE_BUTTON);
+		await page.waitForSelector(constants.LIVE_SETUP_GO_LIVE_BUTTON, {
+			visible: true,
+		});
 
 		var goLiveSetupButton = await page.$(constants.LIVE_SETUP_GO_LIVE_BUTTON);
 		await goLiveSetupButton.click();
 
-		// await page.waitForNavigation();
 		try {
 			await page.waitForSelector(constants.SWITCH_SELECTOR);
-		} catch {
+		} catch (error) {
+			console.log(error);
 			await sendTelegramMessage(
-				`${profile} post blocked, proceeding to exclude from the list of profiles`
+				`${profile} post blocked, proceeding to exclude from the list of profiles\nError:${error}`
 			);
+
+			var currentDateTimeString = getDateString();
+			const directoryPath = getScreenshotSavePath("facebook");
+
+			const imageFilePath = `${directoryPath}\\${currentDateTimeString}.png`;
+
+			await page.screenshot({
+				path: imageFilePath,
+				fullPage: true,
+			});
 			return profile;
 		}
 
@@ -190,8 +188,6 @@ export async function autoStreamVideos(profile, pageData) {
 		for (let closeButton of closeButtons) {
 			await closeButton.click();
 		}
-
-		await delay(1);
 
 		// FIND ALL BUTTONS AND LIST DOWN ADD A GROUP, AUDIENCE SETTINGS AND TITLE DESCRIPTION BUTTONS
 		var buttons = await page.$$(constants.BUTTON_SELECTOR);
@@ -213,12 +209,9 @@ export async function autoStreamVideos(profile, pageData) {
 			}
 		}
 
-		await delay(1);
-
 		// CLICK ON ADD A GROUP BUTTON AND WAIT FOR FULL LOAD
 		await addGroupButton.click();
 		await page.waitForSelector(constants.REMOVE_BUTTON_SELECTOR);
-		// await page.waitForNavigation();
 
 		// SELECT GROUP TO PROMOTE AND CLOSE THE OPTION POPUP
 		var radioButtons = await page.$$(constants.RADIO_BUTTON_SELECTOR);
@@ -238,17 +231,13 @@ export async function autoStreamVideos(profile, pageData) {
 			}
 		}
 
-		// await page.waitForSelector(constants.SWITCH_SELECTOR);
-		await page.waitForSelector(constants.REMOVE_BUTTON_SELECTOR, {
-			visible: false,
-		});
-
-		await delay(1);
+		await page.waitForFunction(
+			`document.querySelector("${constants.REMOVE_BUTTON_SELECTOR}") === null`
+		);
 
 		// CLICK ON AUDIENCE SETTINGS AND WAIT FOR OPTION POPUP
 		await audienceSettingsButton.click();
 		await page.waitForSelector(constants.SAVE_BUTTON_SELECTOR);
-		// await page.waitForNavigation();
 
 		// CLICK ON AGE COMBOBOX OPTION AND SELECT PRESET AGE CATEGORY
 		var audienceSettingComboboxSelector = await page.$(
@@ -270,10 +259,16 @@ export async function autoStreamVideos(profile, pageData) {
 			}
 		}
 
-		// await page.waitForNavigation();
-		await delay(2);
+		await page.waitForFunction(
+			`document.querySelector("${constants.SAVE_BUTTON_SELECTOR}") === null`
+		);
+
 		// CLICK ON STREAMING SOFTWARE AND ACTIVATE PERSISTENT KEY
-		(await page.$(constants.STREAMING_SOFTWARE_SELECTOR)).click();
+		const streamingSoftwareElement = await page.$(
+			constants.STREAMING_SOFTWARE_SELECTOR
+		);
+		await streamingSoftwareElement.click();
+
 		await page.waitForSelector(constants.STREAM_KEY_INPUT_SELECTOR);
 
 		buttons = await page.$$(constants.BUTTON_SELECTOR);
@@ -307,16 +302,12 @@ export async function autoStreamVideos(profile, pageData) {
 			}
 		}
 
-		await delay(1);
-
 		// ADD TO STORY
 		var checkBox = await page.$(constants.CHECKBOX_SELECTOR);
 		var checkBoxStatus = await checkBox.evaluate((el) => el.ariaChecked);
 		if (checkBoxStatus == constants.FALSE_KEYWORD) {
 			await checkBox.click();
 		}
-
-		await delay(1);
 
 		// READ TITLE AND DESCRIPTION
 		const title = readTextFile("title.txt");
@@ -362,9 +353,12 @@ export async function autoStreamVideos(profile, pageData) {
 
 		// START OBS ACTIONS
 		await setStreamStatus("start");
-		await delay(5);
 
 		// CLICK ON GO LIVE BUTTON
+		await page.waitForFunction(
+			`document.querySelector("${constants.GO_LIVE_BUTTON_SELECTOR}") === null`
+		);
+
 		buttons = await page.$$(constants.BUTTON_SELECTOR);
 		for (let button of buttons) {
 			var innerText = (
