@@ -78,6 +78,7 @@ export async function autoStreamVideos(profile, pageData) {
 		// VISITS THE PAGE URL
 		await page.goto(pageData.pageURL, {
 			waitUntil: "networkidle0",
+			timeout: 0,
 		});
 
 		// CHECK IF THE PAGE HAS SWITCH BUTTON - TO IDENTIFY IF CURRENT LOGIN IS USER OR PAGE
