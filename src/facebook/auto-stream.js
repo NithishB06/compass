@@ -77,7 +77,6 @@ export async function autoStreamVideos(profile, pageData) {
 
 		// VISITS THE PAGE URL
 		await page.goto(pageData.pageURL, {
-			waitUntil: "networkidle0",
 			timeout: 0,
 		});
 
