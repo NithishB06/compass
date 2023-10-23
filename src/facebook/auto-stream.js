@@ -19,6 +19,7 @@ import {
 	getScreenshotSavePath,
 } from "../util/screenshot-helper.js";
 import { setMediaCursor } from "../obs/set-media-cursor.js";
+import { getMediaInputStatus } from "../obs/get-media-state.js";
 
 export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 	try {
