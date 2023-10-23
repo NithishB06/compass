@@ -75,6 +75,7 @@ async function facebookAutoStream() {
 		var profileIndex = 0;
 		var streamProfiles = profiles.slice(0);
 		var streamPages = constants.LIVE_SETUP_PAGES_DATA.slice(0);
+		var pageIndex = 0;
 		var removedPageData;
 		var mediaStatus;
 		var mediaCursor = 0;
@@ -119,13 +120,13 @@ async function facebookAutoStream() {
 			killChromeProcesses();
 			profileReturn = await autoStreamVideos(
 				streamProfiles[profileIndex],
-				streamPages[0],
+				streamPages[pageIndex],
 				mediaCursor
 			);
 
 			if (profileReturn) {
 				streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
-				removedPageData = streamPages.shift();
+				streamPages.splice(pageIndex, 1);
 				console.log(
 					`Removed ${profileReturn} and ${removedPageData.pageName} from list of streaming setup`
 				);
@@ -137,6 +138,11 @@ async function facebookAutoStream() {
 			profileIndex += 1;
 			if (profileIndex >= streamProfiles.length) {
 				profileIndex = 0;
+			}
+
+			pageIndex += 1;
+			if (pageIndex >= streamPages.length) {
+				pageIndex = 0;
 			}
 
 			videoNumber += 1;
