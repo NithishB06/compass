@@ -558,16 +558,18 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 								true
 							);
 
-							await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
-
 							while (true) {
 								if (
 									(
 										await getMediaInputStatus(
 											constants.BACKUP_MEDIA_SOURCE_NAME
 										)
-									).mediaState == "OBS_MEDIA_STATE_PAUSED"
+									).mediaState == "OBS_MEDIA_STATE_PLAYING"
 								) {
+									await controlMedia(
+										constants.BACKUP_MEDIA_SOURCE_NAME,
+										"pause"
+									);
 									break;
 								}
 							}
