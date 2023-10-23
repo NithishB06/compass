@@ -126,7 +126,7 @@ async function facebookAutoStream() {
 
 			if (profileReturn) {
 				streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
-				streamPages.splice(pageIndex, 1);
+				var removedPageData = streamPages.splice(pageIndex, 1);
 				console.log(
 					`Removed ${profileReturn} and ${removedPageData.pageName} from list of streaming setup`
 				);
