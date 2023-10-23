@@ -96,7 +96,7 @@ async function facebookAutoStream() {
 		);
 
 		while (videoNumber <= numberOfVideosInFolder) {
-			await setPersistentKey(streamPages[0].persistentKey);
+			await setPersistentKey(streamPages[pageIndex].persistentKey);
 
 			if (videoNumber != 1) {
 				mediaStatus = await getMediaInputStatus(
