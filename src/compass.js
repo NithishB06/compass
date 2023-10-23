@@ -98,8 +98,6 @@ async function facebookAutoStream() {
 			await setPersistentKey(streamPages[0].persistentKey);
 
 			if (videoNumber != 1) {
-				await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
-
 				mediaStatus = await getMediaInputStatus(
 					constants.BACKUP_MEDIA_SOURCE_NAME
 				);

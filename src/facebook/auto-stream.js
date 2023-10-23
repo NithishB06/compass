@@ -529,6 +529,8 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 					`Post Strike Information:\nStrike recorded: ${strikeRecorded}\nProfile post blocked: ${postBlocked}`
 				);
 
+				await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
+
 				await browser.close();
 				return profile;
 
@@ -625,6 +627,9 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 			);
 
 			await controlMedia(constants.MEDIA_SOURCE_NAME, "pause");
+
+			await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
+
 			await delay(5);
 
 			console.log("Handled graceful deletion");
