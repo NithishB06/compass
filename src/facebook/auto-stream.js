@@ -476,7 +476,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 
 				var totalStrikesAfterStrike = 0;
 				var strikeRecorded = "No";
-				var postBlocked = "Yes";
+				var postBlocked = "No";
 
 				// STRIKE RECORD CHECK //
 				await page.goto(constants.PAGE_QUALITY_PAGE, {
@@ -487,7 +487,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 					constants.PAGE_QUALITY_PAGE_SPAN_SELECTOR
 				);
 				for (let pageQualitySpanSelector of pageQualitySpanSelectors) {
-					var spanInnerText = (
+					spanInnerText = (
 						await pageQualitySpanSelector.evaluate((el) => el.innerText)
 					).toLowerCase();
 
@@ -495,6 +495,11 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 						totalStrikesAfterStrike += 1;
 					}
 				}
+
+				console.log(
+					"Total Strikes recorded after strike:",
+					totalStrikesAfterStrike
+				);
 
 				if (totalStrikesAfterStrike > totalStrikes) {
 					strikeRecorded = "Yes";
