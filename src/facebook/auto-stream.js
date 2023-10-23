@@ -474,6 +474,56 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 					);
 				}
 
+				var totalStrikesAfterStrike = 0;
+				var strikeRecorded = "No";
+				var postBlocked = "Yes";
+
+				// STRIKE RECORD CHECK //
+				await page.goto(constants.PAGE_QUALITY_PAGE, {
+					waitUntil: "networkidle0",
+				});
+
+				const pageQualitySpanSelectors = await page.$$(
+					constants.PAGE_QUALITY_PAGE_SPAN_SELECTOR
+				);
+				for (let pageQualitySpanSelector of pageQualitySpanSelectors) {
+					var spanInnerText = (
+						await pageQualitySpanSelector.evaluate((el) => el.innerText)
+					).toLowerCase();
+
+					if (spanInnerText.includes(constants.STRIKE_IDENTIFIER_TEXT)) {
+						totalStrikesAfterStrike += 1;
+					}
+				}
+
+				if (totalStrikesAfterStrike > totalStrikes) {
+					strikeRecorded = "Yes";
+				}
+
+				// POST BLOCK CHECK //
+				await page.goto(pageData.liveSetupURL, {
+					waitUntil: "networkidle0",
+				});
+				await page.waitForSelector(constants.LIVE_SETUP_GO_LIVE_BUTTON, {
+					visible: true,
+				});
+
+				goLiveSetupButton = await page.$(constants.LIVE_SETUP_GO_LIVE_BUTTON);
+				await goLiveSetupButton.click();
+
+				try {
+					await page.waitForSelector(constants.SWITCH_SELECTOR, {
+						timeout: 10000,
+					});
+				} catch {
+					postBlocked = "Yes";
+				}
+
+				// SEND POST STRIKE DATA //
+				await sendTelegramMessage(
+					`Post Strike Information:\nStrike recorded: ${strikeRecorded}\nProfile post blocked: ${postBlocked}`
+				);
+
 				await browser.close();
 				return profile;
 
