@@ -552,6 +552,8 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 
 							await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
 
+							await delay(2);
+
 							await setMediaCursor(
 								constants.BACKUP_MEDIA_SOURCE_NAME,
 								mediaCursor
