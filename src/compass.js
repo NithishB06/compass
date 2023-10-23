@@ -13,6 +13,7 @@ import { sendTelegramMessage } from "./telegram/send-message.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { countFilesInDirectory } from "./util/get-file-count.js";
+import { getMediaInputStatus } from "./obs/get-media-state.js";
 
 // KILLS ALL EXISTING CHROME PROCESSES
 killChromeProcesses();
@@ -74,6 +75,9 @@ async function facebookAutoStream() {
 		var streamProfiles = profiles.slice(0);
 		var streamPages = constants.LIVE_SETUP_PAGES_DATA.slice(0);
 		var removedPageData;
+		var mediaStatus;
+		var mediaCursor = 0;
+		var profileReturn;
 
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = path.dirname(__filename);
@@ -93,6 +97,14 @@ async function facebookAutoStream() {
 			await setPersistentKey(streamPages[0].persistentKey);
 
 			if (videoNumber != 1) {
+				mediaStatus = await getMediaInputStatus(
+					constants.BACKUP_MEDIA_SOURCE_NAME
+				);
+
+				if (mediaStatus.mediaCursor) {
+					mediaCursor = mediaStatus.mediaCursor;
+				}
+
 				await delay(constants.INTERVAL_BETWEEN_STREAMS * 60);
 			}
 
@@ -104,9 +116,10 @@ async function facebookAutoStream() {
 			);
 
 			killChromeProcesses();
-			var profileReturn = await autoStreamVideos(
+			profileReturn = await autoStreamVideos(
 				streamProfiles[profileIndex],
-				streamPages[0]
+				streamPages[0],
+				mediaCursor
 			);
 
 			if (profileReturn) {

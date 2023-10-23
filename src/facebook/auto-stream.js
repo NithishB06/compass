@@ -18,8 +18,9 @@ import {
 	getDateString,
 	getScreenshotSavePath,
 } from "../util/screenshot-helper.js";
+import { setMediaCursor } from "../obs/set-media-cursor.js";
 
-export async function autoStreamVideos(profile, pageData) {
+export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 	try {
 		// OBS BASIC SETUP //
 		var thumbnailSourceId = await getSourceId(
@@ -497,6 +498,13 @@ export async function autoStreamVideos(profile, pageData) {
 								constants.SCENE_NAME,
 								backupMediaSourceId,
 								true
+							);
+
+							await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
+
+							await setMediaCursor(
+								constants.BACKUP_MEDIA_SOURCE_NAME,
+								mediaCursor
 							);
 
 							await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "play");
