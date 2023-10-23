@@ -14,6 +14,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { countFilesInDirectory } from "./util/get-file-count.js";
 import { getMediaInputStatus } from "./obs/get-media-state.js";
+import { controlMedia } from "./obs/control-media.js";
 
 // KILLS ALL EXISTING CHROME PROCESSES
 killChromeProcesses();
@@ -97,6 +98,8 @@ async function facebookAutoStream() {
 			await setPersistentKey(streamPages[0].persistentKey);
 
 			if (videoNumber != 1) {
+				await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, "pause");
+
 				mediaStatus = await getMediaInputStatus(
 					constants.BACKUP_MEDIA_SOURCE_NAME
 				);
