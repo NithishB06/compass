@@ -139,7 +139,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 			}
 		}
 
-		const seeMoreSelector = (await page.$(constants.SEE_MORE_SELECTOR)) || null;
+		var seeMoreSelector = (await page.$(constants.SEE_MORE_SELECTOR)) || null;
 
 		if (seeMoreSelector) {
 			var innerTextContent = await seeMoreSelector.evaluate(
@@ -497,10 +497,16 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 					}
 				}
 
-				console.log(
-					"Total Strikes recorded after strike:",
-					totalStrikesAfterStrike
-				);
+				seeMoreSelector = (await page.$(constants.SEE_MORE_SELECTOR)) || null;
+
+				if (seeMoreSelector) {
+					var innerTextContent = await seeMoreSelector.evaluate(
+						(el) => el.innerText
+					);
+
+					var additionalStrikeCount = Number(innerTextContent.split("(")[1][0]);
+					totalStrikesAfterStrike += additionalStrikeCount;
+				}
 
 				if (totalStrikesAfterStrike > totalStrikes) {
 					strikeRecorded = "Yes";

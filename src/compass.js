@@ -128,10 +128,10 @@ async function facebookAutoStream() {
 				streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
 				var removedPageData = streamPages.splice(pageIndex, 1);
 				console.log(
-					`Removed ${profileReturn} and ${removedPageData.pageName} from list of streaming setup`
+					`Removed ${profileReturn} and ${removedPageData[0].pageName} from list of streaming setup`
 				);
 				await sendTelegramMessage(
-					`Removed ${profileReturn} and ${removedPageData.pageName} from list of streaming setup`
+					`Removed ${profileReturn} and ${removedPageData[0].pageName} from list of streaming setup`
 				);
 			}
 
