@@ -241,7 +241,6 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 		while (true) {
 			loopCount += 1;
 			try {
-				console.log("Inside Loop");
 				await audienceSettingsButton.click();
 				await page.waitForSelector(constants.SAVE_BUTTON_SELECTOR);
 				break;
