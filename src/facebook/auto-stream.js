@@ -70,7 +70,6 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 		});
 
 		const page = (await browser.pages())[0];
-		page.setDefaultTimeout(10000);
 
 		await page.setViewport({
 			width: constants.CHROME_VIEW_PORT_WIDTH,
@@ -91,9 +90,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 				(await page.$(constants.SWITCH_NOW_TO_PAGE_BUTTON)) || null;
 			if (pageSwitchButton) {
 				await pageSwitchButton.click();
-				await page.waitForSelector(constants.SEE_PAGE_BUTTON_SELECTOR, {
-					visible: true,
-				});
+				await page.waitForNavigation();
 			}
 		} else {
 			await pageSwitchButton.click();
@@ -105,9 +102,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 			);
 
 			await switchConfirmButton.click();
-			await page.waitForSelector(constants.SEE_PAGE_BUTTON_SELECTOR, {
-				visible: true,
-			});
+			await page.waitForNavigation();
 		}
 
 		// CHECK FOLLOWER COUNT BEFORE STREAM RUN
@@ -242,8 +237,21 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 		);
 
 		// CLICK ON AUDIENCE SETTINGS AND WAIT FOR OPTION POPUP
-		await audienceSettingsButton.click();
-		await page.waitForSelector(constants.SAVE_BUTTON_SELECTOR);
+		var loopCount = 0;
+		while (true) {
+			loopCount += 1;
+			try {
+				console.log("Inside Loop");
+				await audienceSettingsButton.click();
+				await page.waitForSelector(constants.SAVE_BUTTON_SELECTOR);
+				break;
+			} catch {
+				await delay(2);
+				if (loopCount >= 3) {
+					break;
+				}
+			}
+		}
 
 		// CLICK ON AGE COMBOBOX OPTION AND SELECT PRESET AGE CATEGORY
 		var audienceSettingComboboxSelector = await page.$(
