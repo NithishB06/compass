@@ -1,23 +1,23 @@
-import { constants } from "../constants.js";
+import { constants } from '../constants.js';
 
 const profileNumbers = [];
 var chromeProfileRanges = constants.CHROME_PROFILE_RANGES;
 var chromeProfiles = constants.CHROME_PROFILES;
 
 if (chromeProfileRanges) {
-	for (
-		let number = chromeProfileRanges[0];
-		number <= chromeProfileRanges[1];
-		number++
-	) {
-		profileNumbers.push(number);
-	}
+  for (
+    let number = chromeProfileRanges[0];
+    number <= chromeProfileRanges[1];
+    number++
+  ) {
+    profileNumbers.push(number);
+  }
 }
 
 if (chromeProfiles) {
-	for (let chromeProfile of chromeProfiles) {
-		profileNumbers.push(chromeProfile);
-	}
+  for (let chromeProfile of chromeProfiles) {
+    profileNumbers.push(chromeProfile);
+  }
 }
 
 profileNumbers.sort((a, b) => a - b);
@@ -27,18 +27,18 @@ var profileString;
 var profileName;
 
 if (profileNumbers) {
-	for (let profileNumber of profileNumbers) {
-		if (profileNumber < 100) {
-			if (profileNumber < 10) {
-				profileString = "00" + String(profileNumber);
-			} else {
-				profileString = "0" + String(profileNumber);
-			}
-		} else {
-			profileString = String(profileNumber);
-		}
+  for (let profileNumber of profileNumbers) {
+    if (profileNumber < 100) {
+      if (profileNumber < 10) {
+        profileString = '00' + String(profileNumber);
+      } else {
+        profileString = '0' + String(profileNumber);
+      }
+    } else {
+      profileString = String(profileNumber);
+    }
 
-		profileName = constants.CHROME_PROFILE_PATTERN + profileString;
-		profiles.push(profileName);
-	}
+    profileName = constants.CHROME_PROFILE_PATTERN + profileString;
+    profiles.push(profileName);
+  }
 }

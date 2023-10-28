@@ -1,5 +1,5 @@
-import OBSWebSocket from "obs-websocket-js";
-import { constants } from "../constants.js";
+import OBSWebSocket from 'obs-websocket-js';
+import { constants } from '../constants.js';
 
 export const obs = new OBSWebSocket();
 

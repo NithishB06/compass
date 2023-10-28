@@ -1,14 +1,14 @@
-import { obs, hostString } from "./obs-ws-init.js";
-import { constants } from "../constants.js";
+import { obs, hostString } from './obs-ws-init.js';
+import { constants } from '../constants.js';
 
 export async function getMediaInputStatus(sourceName) {
-	await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
+  await obs.connect(hostString, constants.OBS_WEBSOCKET_PASSWORD);
 
-	const mediaStatus = await obs.call("GetMediaInputStatus", {
-		inputName: sourceName,
-	});
+  const mediaStatus = await obs.call('GetMediaInputStatus', {
+    inputName: sourceName
+  });
 
-	await obs.disconnect();
+  await obs.disconnect();
 
-	return mediaStatus;
+  return mediaStatus;
 }
