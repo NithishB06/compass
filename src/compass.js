@@ -133,14 +133,15 @@ async function facebookAutoStream() {
         await sendTelegramMessage(
           `Removed ${profileReturn} and ${removedPageData[0].pageName} from list of streaming setup`
         );
+      } else {
+        profileIndex += 1;
+        pageIndex += 1;
       }
 
-      profileIndex += 1;
       if (profileIndex >= streamProfiles.length) {
         profileIndex = 0;
       }
 
-      pageIndex += 1;
       if (pageIndex >= streamPages.length) {
         pageIndex = 0;
       }
