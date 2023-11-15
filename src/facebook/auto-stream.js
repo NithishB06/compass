@@ -181,7 +181,10 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
         path: imageFilePath,
         fullPage: true
       });
-      return profile;
+      return {
+        strikeRecorded: 'No',
+        postBlocked: 'Yes'
+      };
     }
 
     // CLOSE ALL POPUPS BY CLICKING ON CLOSE BUTTON
@@ -545,8 +548,85 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 
         await controlMedia(constants.BACKUP_MEDIA_SOURCE_NAME, 'pause');
 
+        // REMOVE ADMIN //
+        if (postBlocked == 'Yes') {
+          try {
+            await page.goto(constants.PAGE_ACCESS_URL, {
+              waitUntil: 'networkidle0'
+            });
+
+            var removeAdminThreeDots = await page.$(
+              constants.PAGE_ADMIN_REMOVE_OPTION
+            );
+            await removeAdminThreeDots.click();
+
+            await page.waitForSelector(constants.PAGE_ADMIN_REMOVE_ACCESS_MENU);
+
+            var removeAccessMenu = (
+              await page.$$(constants.PAGE_ADMIN_REMOVE_ACCESS_MENU)
+            ).at(-1);
+
+            await removeAccessMenu.click();
+
+            await page.waitForSelector(
+              constants.PAGE_ADMIN_REMOVE_CONFIRM_BUTTON
+            );
+
+            await page.type(
+              constants.PASSWORD_FIELD,
+              constants.ADMIN_PASSWORD,
+              {
+                delay: 100
+              }
+            );
+
+            var confirmAdminRemoveButton = await page.$(
+              constants.PAGE_ADMIN_REMOVE_CONFIRM_BUTTON
+            );
+
+            await confirmAdminRemoveButton.click();
+
+            try {
+              await page.waitForNavigation({
+                timeout: 10000
+              });
+            } catch {
+              var passwordFieldBox = await page.$(constants.PASSWORD_FIELD);
+              await passwordFieldBox.click();
+
+              await page.keyboard.down('Control');
+              await page.keyboard.down('A');
+
+              await page.keyboard.up('A');
+              await page.keyboard.up('Control');
+
+              await page.keyboard.type(constants.ADMIN_PASSWORD_BACKUP, {
+                delay: 100
+              });
+
+              await confirmAdminRemoveButton.click();
+
+              await page.waitForNavigation({
+                timeout: 10000
+              });
+
+              await sendTelegramMessage(
+                `Successfully removed admin ${profile} from page ${pageData.pageName}`
+              );
+            }
+          } catch (error) {
+            console.log(error);
+            console.log(
+              `Unable to remove admin ${profile} from page ${pageData.pageName}`
+            );
+          }
+        }
+
         await browser.close();
-        return profile;
+        return {
+          strikeRecorded: strikeRecorded,
+          postBlocked: postBlocked
+        };
 
         // break;
       } catch (e) {

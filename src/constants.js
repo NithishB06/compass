@@ -120,5 +120,16 @@ export const constants = {
   TELEGRAM_CHAT_ID: configData.telegramChatId,
 
   VIEWER_COUNT_THRESHOLD: configData.viewerCountThreshold,
-  STREAM_FOLDER_NAME: configData.streamFolderName
+  STREAM_FOLDER_NAME: configData.streamFolderName,
+
+  // ADMIN REMOVAL
+  PAGE_ACCESS_URL: `https://www.facebook.com/settings?tab=profile_access`,
+  PAGE_ADMIN_REMOVE_OPTION: `div[aria-label='Options' i][role='button' i]`,
+  PAGE_ADMIN_REMOVE_ACCESS_MENU: `div[role='menuitem' i]`,
+  PAGE_ADMIN_REMOVE_CONFIRM_BUTTON: `div[aria-label='Confirm' i][role='button' i]`,
+  PASSWORD_FIELD: `input[type='password' i]`,
+  WRONG_PASSWORD_LABEL: `span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x676frb.x1pg5gke.xvq8zen.xo1l8bm.x1a1m0xk.x1yc453h`,
+
+  ADMIN_PASSWORD: configData.adminPassword,
+  ADMIN_PASSWORD_BACKUP: configData.adminPasswordBackup
 };

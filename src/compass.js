@@ -79,7 +79,7 @@ async function facebookAutoStream() {
     var removedPageData;
     var mediaStatus;
     var mediaCursor = 0;
-    var profileReturn;
+    var strikeDataReturn;
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -118,21 +118,37 @@ async function facebookAutoStream() {
       );
 
       killChromeProcesses();
-      profileReturn = await autoStreamVideos(
+      strikeDataReturn = await autoStreamVideos(
         streamProfiles[profileIndex],
         streamPages[pageIndex],
         mediaCursor
       );
 
-      if (profileReturn) {
-        streamProfiles.splice(streamProfiles.indexOf(profileReturn), 1);
-        var removedPageData = streamPages.splice(pageIndex, 1);
-        console.log(
-          `Removed ${profileReturn} and ${removedPageData[0].pageName} from list of streaming setup`
-        );
-        await sendTelegramMessage(
-          `Removed ${profileReturn} and ${removedPageData[0].pageName} from list of streaming setup`
-        );
+      if (Object.keys(strikeDataReturn).length) {
+        if (strikeDataReturn.strikeRecorded == 'Yes') {
+          removedPageData = streamPages.splice(pageIndex, 1);
+          console.log(
+            `Removed ${removedPageData[0].pageName} from list of streaming setup`
+          );
+
+          await sendTelegramMessage(
+            `Removed ${removedPageData[0].pageName} from list of streaming setup`
+          );
+        }
+
+        if (strikeDataReturn.postBlocked == 'Yes') {
+          streamProfiles.splice(
+            streamProfiles.indexOf(streamProfiles[profileIndex]),
+            1
+          );
+          console.log(
+            `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
+          );
+
+          await sendTelegramMessage(
+            `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
+          );
+        }
       } else {
         profileIndex += 1;
         pageIndex += 1;
