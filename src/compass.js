@@ -134,6 +134,8 @@ async function facebookAutoStream() {
           await sendTelegramMessage(
             `Removed ${removedPageData[0].pageName} from list of streaming setup`
           );
+        } else {
+          pageIndex += 1;
         }
 
         if (strikeDataReturn.postBlocked == 'Yes') {
@@ -148,6 +150,8 @@ async function facebookAutoStream() {
           await sendTelegramMessage(
             `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
           );
+        } else {
+          profileIndex += 1;
         }
       } else {
         profileIndex += 1;
