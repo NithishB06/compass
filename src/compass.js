@@ -124,7 +124,7 @@ async function facebookAutoStream() {
         mediaCursor
       );
 
-      if (Object.keys(strikeDataReturn).length) {
+      if (strikeDataReturn && Object.keys(strikeDataReturn).length) {
         if (strikeDataReturn.strikeRecorded == 'Yes') {
           removedPageData = streamPages.splice(pageIndex, 1);
           console.log(
