@@ -124,38 +124,40 @@ async function facebookAutoStream() {
         mediaCursor
       );
 
-      if (strikeDataReturn && Object.keys(strikeDataReturn).length) {
-        if (strikeDataReturn.strikeRecorded == 'Yes') {
-          removedPageData = streamPages.splice(pageIndex, 1);
-          console.log(
-            `Removed ${removedPageData[0].pageName} from list of streaming setup`
-          );
+      if (strikeDataReturn) {
+        if (Object.keys(strikeDataReturn).length) {
+          if (strikeDataReturn.strikeRecorded == 'Yes') {
+            removedPageData = streamPages.splice(pageIndex, 1);
+            console.log(
+              `Removed ${removedPageData[0].pageName} from list of streaming setup`
+            );
 
-          await sendTelegramMessage(
-            `Removed ${removedPageData[0].pageName} from list of streaming setup`
-          );
-        } else {
-          pageIndex += 1;
-        }
+            await sendTelegramMessage(
+              `Removed ${removedPageData[0].pageName} from list of streaming setup`
+            );
+          } else {
+            pageIndex += 1;
+          }
 
-        if (strikeDataReturn.postBlocked == 'Yes') {
-          streamProfiles.splice(
-            streamProfiles.indexOf(streamProfiles[profileIndex]),
-            1
-          );
-          console.log(
-            `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
-          );
+          if (strikeDataReturn.postBlocked == 'Yes') {
+            streamProfiles.splice(
+              streamProfiles.indexOf(streamProfiles[profileIndex]),
+              1
+            );
+            console.log(
+              `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
+            );
 
-          await sendTelegramMessage(
-            `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
-          );
+            await sendTelegramMessage(
+              `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
+            );
+          } else {
+            profileIndex += 1;
+          }
         } else {
           profileIndex += 1;
+          pageIndex += 1;
         }
-      } else {
-        profileIndex += 1;
-        pageIndex += 1;
       }
 
       if (profileIndex >= streamProfiles.length) {
