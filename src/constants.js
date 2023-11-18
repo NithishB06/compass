@@ -131,5 +131,7 @@ export const constants = {
   WRONG_PASSWORD_LABEL: `span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x676frb.x1pg5gke.xvq8zen.xo1l8bm.x1a1m0xk.x1yc453h`,
 
   ADMIN_PASSWORD: configData.adminPassword,
-  ADMIN_PASSWORD_BACKUP: configData.adminPasswordBackup
+  ADMIN_PASSWORD_BACKUP: configData.adminPasswordBackup,
+
+  CONSERVATIVE_MODE: configData.conservativeMode
 };

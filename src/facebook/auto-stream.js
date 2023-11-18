@@ -410,6 +410,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
     var viewerCountRaw;
     var viewerCount;
     var conservativeMode = false;
+    var toConservativeMode = constants.CONSERVATIVE_MODE;
 
     while (new Date() < nowPlusXMinutes) {
       if (liveJustStarted) {
@@ -631,7 +632,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
         // break;
       } catch (e) {
         if (e instanceof TimeoutError) {
-          if (!conservativeMode) {
+          if (toConservativeMode && !conservativeMode) {
             viewCountSpan = (
               await page.$$(constants.SPAN_TAGS_DURING_LIVE_SELECTOR)
             )[4];
