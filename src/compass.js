@@ -89,11 +89,22 @@ async function facebookAutoStream() {
       `../${constants.STREAM_FOLDER_NAME}/`
     );
 
-    const numberOfVideosInFolder = await countFilesInDirectory(pathToDirectory);
+    var numberOfVideosInFolder;
+    if (constants.AGGRESSIVE_MODE) {
+      numberOfVideosInFolder = 100;
+    } else {
+      numberOfVideosInFolder = await countFilesInDirectory(pathToDirectory);
+    }
 
-    await sendTelegramMessage(
-      `Auto Stream Initializing:\nNumber of video(s): ${numberOfVideosInFolder}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
-    );
+    if (!constants.AGGRESSIVE_MODE) {
+      await sendTelegramMessage(
+        `Auto Stream Initializing:\nNumber of video(s): ${numberOfVideosInFolder}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
+      );
+    } else {
+      await sendTelegramMessage(
+        `[AGGRESSIVE]\nAuto Stream Initializing:\nNumber of video(s): NA\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
+      );
+    }
 
     while (videoNumber <= numberOfVideosInFolder) {
       await setPersistentKey(streamPages[pageIndex].persistentKey);
@@ -140,16 +151,17 @@ async function facebookAutoStream() {
           }
 
           if (strikeDataReturn.postBlocked == 'Yes') {
-            streamProfiles.splice(
-              streamProfiles.indexOf(streamProfiles[profileIndex]),
-              1
-            );
             console.log(
               `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
             );
 
             await sendTelegramMessage(
               `Removed ${streamProfiles[profileIndex]} from list of streaming setup`
+            );
+
+            streamProfiles.splice(
+              streamProfiles.indexOf(streamProfiles[profileIndex]),
+              1
             );
           } else {
             profileIndex += 1;

@@ -20,6 +20,21 @@ import {
 } from '../util/screenshot-helper.js';
 import { setMediaCursor } from '../obs/set-media-cursor.js';
 import { getMediaInputStatus } from '../obs/get-media-state.js';
+import readline from 'readline';
+
+function askQuestion(query) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return new Promise((resolve) =>
+    rl.question(query, (ans) => {
+      rl.close();
+      resolve(ans);
+    })
+  );
+}
 
 export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
   try {
@@ -53,7 +68,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 
     await toggleThumbnailVisibility(constants.SCENE_NAME, mediaSourceId, true);
 
-    await controlAudio(constants.MEDIA_SOURCE_NAME, 'unmute');
+    await controlAudio(constants.MEDIA_SOURCE_NAME, 'mute');
 
     await controlAudio(constants.BACKUP_MEDIA_SOURCE_NAME, 'mute');
 
@@ -319,10 +334,12 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
     }
 
     // ADD TO STORY
-    var checkBox = await page.$(constants.CHECKBOX_SELECTOR);
-    var checkBoxStatus = await checkBox.evaluate((el) => el.ariaChecked);
-    if (checkBoxStatus == constants.FALSE_KEYWORD) {
-      await checkBox.click();
+    if (constants.ADD_TO_STORY) {
+      var checkBox = await page.$(constants.CHECKBOX_SELECTOR);
+      var checkBoxStatus = await checkBox.evaluate((el) => el.ariaChecked);
+      if (checkBoxStatus == constants.FALSE_KEYWORD) {
+        await checkBox.click();
+      }
     }
 
     // READ TITLE AND DESCRIPTION
@@ -464,7 +481,9 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 
         // HANDLE OBS - FOR ABRUPT DELETION //
         await setStreamStatus('stop');
-        await moveNextVideo(constants.MEDIA_SOURCE_NAME);
+        if (!constants.AGGRESSIVE_MODE) {
+          await moveNextVideo(constants.MEDIA_SOURCE_NAME);
+        }
         await delay(1);
         await toggleThumbnailVisibility(
           constants.SCENE_NAME,
@@ -556,6 +575,10 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
               waitUntil: 'networkidle0'
             });
 
+            const ans = await askQuestion(
+              'Are you sure you want to proceed with admin removal? '
+            );
+
             var removeAdminThreeDots = await page.$(
               constants.PAGE_ADMIN_REMOVE_OPTION
             );
@@ -573,13 +596,12 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
               constants.PAGE_ADMIN_REMOVE_CONFIRM_BUTTON
             );
 
-            await page.type(
-              constants.PASSWORD_FIELD,
-              constants.ADMIN_PASSWORD,
-              {
-                delay: 100
-              }
-            );
+            var passwordFieldBox = await page.$(constants.PASSWORD_FIELD);
+            await passwordFieldBox.click();
+
+            await page.keyboard.type(constants.ADMIN_PASSWORD, {
+              delay: 100
+            });
 
             var confirmAdminRemoveButton = await page.$(
               constants.PAGE_ADMIN_REMOVE_CONFIRM_BUTTON
@@ -592,7 +614,7 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
                 timeout: 10000
               });
             } catch {
-              var passwordFieldBox = await page.$(constants.PASSWORD_FIELD);
+              passwordFieldBox = await page.$(constants.PASSWORD_FIELD);
               await passwordFieldBox.click();
 
               await page.keyboard.down('Control');
@@ -715,7 +737,9 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
 
       // HANDLE OBS - FOR GRACEFUL DELETION //
       await setStreamStatus('stop');
-      await moveNextVideo(constants.MEDIA_SOURCE_NAME);
+      if (!constants.AGGRESSIVE_MODE) {
+        await moveNextVideo(constants.MEDIA_SOURCE_NAME);
+      }
       await delay(1);
       await toggleThumbnailVisibility(
         constants.SCENE_NAME,

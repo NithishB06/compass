@@ -133,5 +133,8 @@ export const constants = {
   ADMIN_PASSWORD: configData.adminPassword,
   ADMIN_PASSWORD_BACKUP: configData.adminPasswordBackup,
 
-  CONSERVATIVE_MODE: configData.conservativeMode
+  CONSERVATIVE_MODE: configData.conservativeMode,
+
+  AGGRESSIVE_MODE: configData.aggressiveMode,
+  ADD_TO_STORY: configData.addToStory
 };
