@@ -334,10 +334,15 @@ export async function autoStreamVideos(profile, pageData, mediaCursor = 0) {
     }
 
     // ADD TO STORY
+    var checkBox = await page.$(constants.CHECKBOX_SELECTOR);
+    var checkBoxStatus = await checkBox.evaluate((el) => el.ariaChecked);
+
     if (constants.ADD_TO_STORY) {
-      var checkBox = await page.$(constants.CHECKBOX_SELECTOR);
-      var checkBoxStatus = await checkBox.evaluate((el) => el.ariaChecked);
-      if (checkBoxStatus == constants.FALSE_KEYWORD) {
+      if (checkBoxStatus.toLowerCase() == constants.FALSE_KEYWORD) {
+        await checkBox.click();
+      }
+    } else {
+      if (checkBoxStatus.toLowerCase() != constants.FALSE_KEYWORD) {
         await checkBox.click();
       }
     }
