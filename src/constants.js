@@ -136,5 +136,6 @@ export const constants = {
   CONSERVATIVE_MODE: configData.conservativeMode,
 
   AGGRESSIVE_MODE: configData.aggressiveMode,
-  ADD_TO_STORY: configData.addToStory
+  ADD_TO_STORY: configData.addToStory,
+  NUMBER_OF_VIDEOS: configData.numberOfVideos
 };

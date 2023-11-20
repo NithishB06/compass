@@ -91,14 +91,14 @@ async function facebookAutoStream() {
 
     var numberOfVideosInFolder;
     if (constants.AGGRESSIVE_MODE) {
-      numberOfVideosInFolder = 100;
+      numberOfVideosInFolder = constants.NUMBER_OF_VIDEOS;
     } else {
       numberOfVideosInFolder = await countFilesInDirectory(pathToDirectory);
     }
 
     if (!constants.AGGRESSIVE_MODE) {
       await sendTelegramMessage(
-        `Auto Stream Initializing:\nNumber of video(s): ${numberOfVideosInFolder}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
+        `[NORMAL]\nAuto Stream Initializing:\nNumber of video(s): ${numberOfVideosInFolder}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
       );
     } else {
       await sendTelegramMessage(
