@@ -102,7 +102,7 @@ async function facebookAutoStream() {
       );
     } else {
       await sendTelegramMessage(
-        `[AGGRESSIVE]\nAuto Stream Initializing:\nNumber of video(s): NA\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
+        `[AGGRESSIVE]\nAuto Stream Initializing:\nNumber of video(s): ${numberOfVideosInFolder}\nStream duration: ${constants.LIVE_DURATION} min(s)\nInterval between streams: ${constants.INTERVAL_BETWEEN_STREAMS} min(s)\nNumber of admins: ${profiles.length}\nNumber of pages: ${streamPages.length}`
       );
     }
 
